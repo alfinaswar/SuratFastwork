@@ -74,15 +74,11 @@
                                         </div>
                                         <div class="form-group text-left mb-5">
 
-                                            <span class="form-check d-inline-block">
-                                                <input type="checkbox" class="form-check-input" id="check1"
-                                                    name="example1">
-                                                <label class="form-check-label" for="check1">Remember me</label>
-                                            </span>
+
                                         </div>
 
                                         <div class="text-center bottom">
-                                            <button class="btn btn-primary button-md btn-block" id="nav-sign-tab"
+                                            <button class="btn btn-primary button-md btn-block w-100" id="nav-sign-tab"
                                                 type="submit">Login</button>
 
                                         </div>
