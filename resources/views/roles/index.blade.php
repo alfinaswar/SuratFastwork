@@ -24,7 +24,7 @@
 
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="example" class="display" style="min-width: 845px" width="100%">
+                    <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">
                         <thead>
                             <tr>
                                 <th width="4%">No</th>

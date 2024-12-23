@@ -28,7 +28,7 @@
 
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th width="10px" class="text-center">No</th>
                                 <th>Nama</th>
                                 <th>Email</th>
                                 <th>Hak Akses</th>
@@ -38,7 +38,7 @@
                         <tbody>
                             @foreach ($data as $key => $user)
                                 <tr>
-                                    <td>{{ ++$i }}</td>
+                                    <td class="text-center">{{ ++$i }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>

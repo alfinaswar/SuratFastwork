@@ -84,12 +84,15 @@
                             <label class="form-label">Password</label>
                             {!! Form::password('password', ['placeholder' => 'Password', 'class' => 'form-control']) !!}
                             @if (isset($user))
-                                <small class="text-muted">Leave blank if you don't want to change the password</small>
+                                <small class="text-danger">Kosongkan jika tidak ingin mengubah password</small>
                             @endif
                         </div>
                         <div class="col-sm-6 m-b30">
-                            <label class="form-label">Confirm Password</label>
+                            <label class="form-label">Konfirmasi Password</label>
                             {!! Form::password('confirm-password', ['placeholder' => 'Confirm Password', 'class' => 'form-control']) !!}
+                            @if (isset($user))
+                                <small class="text-danger">Kosongkan jika tidak ingin mengubah password</small>
+                            @endif
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Foto</label>
@@ -116,6 +119,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">{{ isset($user) ? 'Update' : 'Simpan' }}</button>
+                    <a href="{{ route('users.index') }}" class="btn btn-secondary">Kembali</a>
                 </div>
                 {!! Form::close() !!}
             </div>

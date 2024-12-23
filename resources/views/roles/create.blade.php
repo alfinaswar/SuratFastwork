@@ -49,8 +49,9 @@
                                  </div>
                              </div>
                          </div>
-                         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                         <div class="col-xs-12 col-sm-12 col-md-12">
                              <button type="submit" class="btn btn-primary">Buat</button>
+                             <a href="{{ route('roles.index') }}" class="btn btn-secondary">Kembali</a>
                          </div>
                      </div>
                      {!! Form::close() !!}

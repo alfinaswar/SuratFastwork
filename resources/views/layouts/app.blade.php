@@ -6,7 +6,6 @@
     <title>E - SURAT</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('') }}assets/images/favicon.ico">
     <!-- plugin css -->
@@ -18,9 +17,16 @@
         type="text/css" />
     <link href="{{ asset('') }}assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css"
         rel="stylesheet" type="text/css" />
+    <!-- Choices -->
+    <link href="{{ asset('') }}assets/libs/choices.js/public/assets/styles/choices.min.css" rel="stylesheet"
+        type="text/css" />
 
     {{-- <!-- preloader css -->
     <link rel="stylesheet" href="{{ asset('') }}assets/css/preloader.min.css" type="text/css" /> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Bootstrap Css -->
     <link href="{{ asset('') }}assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet"
@@ -238,21 +244,21 @@
                         <li class="menu-title" data-key="t-menu">Menu</li>
 
                         <li>
-                            <a href="dashboard.html">
+                            <a href="{{ route('home') }}">
                                 <i data-feather="home"></i>
                                 <span data-key="t-dashboard">Dashboard</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="draft-surat.html">
+                            <a href="{{ route('drafter.index') }}">
                                 <i data-feather="file-text"></i>
                                 <span data-key="t-draft-surat">Draft Surat</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="verifikasi-surat.html">
+                            <a href="{{ route('verifikator.index') }}">
                                 <i data-feather="check-square"></i>
                                 <span data-key="t-verifikasi-surat">Verifikasi Surat</span>
                             </a>
@@ -293,7 +299,6 @@
                             </a>
                         </li>
 
-
                         <li>
                             <a href="template-surat.html">
                                 <i data-feather="layout"></i>
@@ -310,9 +315,11 @@
                                 <li><a href="{{ route('users.index') }}" data-key="t-level-1-1">Manajemen Users</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('roles.index') }}" class="has-arrow"
-                                        data-key="t-level-1-2">Manajemen
-                                        Role</a>
+                                    <a href="{{ route('roles.index') }}" data-key="t-level-1-2">Manajemen Role</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('kategori-surat.index') }}" data-key="t-level-1-2">Master Jenis
+                                        Surat</a>
                                 </li>
                             </ul>
                         </li>
@@ -332,6 +339,7 @@
                         </li>
                     </ul>
                 </div>
+
 
                 <!-- Sidebar -->
             </div>
@@ -398,7 +406,7 @@
     <!-- END layout-wrapper -->
 
 
-    <!-- Right Sidebar -->
+    {{-- <!-- Right Sidebar -->
     <div class="right-bar">
         <div data-simplebar class="h-100">
             <div class="rightbar-title d-flex align-items-center p-3">
@@ -531,7 +539,7 @@
             </div>
 
         </div> <!-- end slimscroll-menu-->
-    </div>
+    </div> --}}
     <!-- /Right-bar -->
 
     <!-- Right bar overlay-->
@@ -561,9 +569,20 @@
     <!-- Required datatable js -->
     <script src="{{ asset('') }}assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('') }}assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-
+    <!-- choices js -->
+    <script src="{{ asset('') }}assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
     <!-- Datatable init js -->
     <script src="{{ asset('') }}assets/js/pages/datatables.init.js"></script>
+    <script src="{{ asset('') }}assets/js/pages/form-advanced.init.js"></script>
+    <!-- ckeditor -->
+    <script src="{{ asset('') }}assets/libs/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
+
+    <!-- init js -->
+    <script src="{{ asset('') }}assets/js/pages/form-editor.init.js"></script>
+    <script>
+        feather.replace();
+    </script>
+    @stack('js')
 </body>
 
 </html>
