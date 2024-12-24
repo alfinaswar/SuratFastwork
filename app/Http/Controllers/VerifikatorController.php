@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CatatanSurat;
 use App\Models\Surat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class VerifikatorController extends Controller
@@ -41,17 +42,33 @@ class VerifikatorController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
             'Status' => 'required|string',
             'Catatan' => 'nullable|string',
             'idsurat' => 'nullable|string',
         ]);
-        $surat = Surat::findOrFail($request->idsurat);
+
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $data = $request->all();
+
+        $surat = Surat::find($request->idsurat);
+        // dd($surat);
+        $surat->update([
+            'Status' => $data['Status'],
+            'ApprovedBy' => auth()->user()->id,
+            'DieditOleh' => auth()->user()->id,
+        ]);
         $catatanSurat = CatatanSurat::updateOrCreate(
-            ['idSurat' => $validated['idsurat']],
+            ['idSurat' => $data['idsurat']],
             [
-                'Status' => $validated['Status'],
-                'Catatan' => $validated['Catatan'] ?? null,
+                'Status' => $data['Status'],
+                'Catatan' => $data['Catatan'] ?? null,
                 'DibuatOleh' => auth()->user()->id,
                 'DieditOleh' => auth()->user()->id,
             ]
@@ -60,8 +77,9 @@ class VerifikatorController extends Controller
         activity()
             ->causedBy(auth()->user())
             ->performedOn($catatanSurat)
-            ->withProperties(['status' => $validated['Status'], 'revisi' => $validated['Catatan']])
-            ->log('Status surat telah diperbarui');
+            ->withProperties(['status' => $data['Status'], 'revisi' => $data['Catatan']])
+            ->log('Status dengan Perihal: ' . $surat->NomorSurat . ' surat telah diperbarui');
+
         return redirect()->route('verifikator.index')->with('success', 'Status Surat Berhasil Diperbarui');
     }
 

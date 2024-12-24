@@ -4,8 +4,18 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">{{ __('Edit Surat') }}</div>
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-6">
+                            Edit Surat
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Catatan Verifikator</button>
+                        </div>
+                    </div>
 
+                </div>
                 <div class="card-body">
                     <form action="{{ route('drafter.update', $surat->id) }}" method="POST">
                         @csrf
@@ -121,6 +131,20 @@
                         </div>
                     </form>
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">Catatan Verifikator</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="card bg-danger border-info text-whiite">
+                <div class="card-body">
+                    <h5 class="mb-3 text-white fw-bold">Poin Revisi</h5>
+                    <p class="card-text text-white">{{ $surat->getCatatan->Catatan }}</p>
                 </div>
             </div>
         </div>

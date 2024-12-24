@@ -21,9 +21,18 @@ class DrafterController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btnEdit = '<a href="' . route('drafter.edit', $row->id) . '" class="btn btn-primary btn-md btn-edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                    $btnDelete = '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-md btn-delete" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
-                    return $btnEdit . ' ' . $btnDelete;
+                    if ($row->Status == 'Verified') {
+                        $status = ' <span class="alert alert-success alert-dismissible badge-icon fade show">
+        <i class="fas fa-check-circle"></i> Verified
+    </span>';
+                        return $status;
+                    } else {
+                        $btnEdit = '<a href="' . route('drafter.edit', $row->id) . '" class="btn btn-primary btn-md btn-edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                        $btnDelete = '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-md btn-delete" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+                        return $btnEdit . ' ' . $btnDelete;
+                    }
+
+
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -100,7 +109,7 @@ class DrafterController extends Controller
      */
     public function edit($id)
     {
-        $surat = Surat::findOrFail($id);
+        $surat = Surat::with('getCatatan')->findOrFail($id);
         $kategori = MasterJenis::all();
         $penerima = User::all();
 
@@ -146,7 +155,7 @@ class DrafterController extends Controller
             'DieditOleh' => auth()->user()->id,
         ]);
 
-        // Log the update
+        // Log update
         activity()
             ->causedBy(auth()->user())
             ->performedOn($surat)

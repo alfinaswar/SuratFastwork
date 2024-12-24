@@ -265,7 +265,7 @@
                         </li>
 
                         <li>
-                            <a href="persetujuan-surat.html">
+                            <a href="{{ route('persetujuan-surat.index') }}">
                                 <i data-feather="thumbs-up"></i>
                                 <span data-key="t-persetujuan-surat">Persetujuan Surat</span>
                             </a>
@@ -546,7 +546,7 @@
     <div class="rightbar-overlay"></div>
 
     <!-- JAVASCRIPT -->
-    <script src="{{ asset('') }}assets/libs/jquery/jquery.min.js"></script>
+    {{-- <script src="{{ asset('') }}assets/libs/jquery/jquery.min.js"></script> --}}
     <script src="{{ asset('') }}assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('') }}assets/libs/metismenu/metisMenu.min.js"></script>
     <script src="{{ asset('') }}assets/libs/simplebar/simplebar.min.js"></script>

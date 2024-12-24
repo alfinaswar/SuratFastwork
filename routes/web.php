@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\DrafterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\MasterJenisController;
+use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SuratController;
@@ -30,6 +32,14 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::prefix('log')->group(function () {
+        Route::GET('/getLog', [LogController::class, 'getLog'])->name('log.getLog');
+    });
+    Route::prefix('persetujuan-surat')->group(function () {
+        Route::GET('/', [PersetujuanController::class, 'index'])->name('persetujuan-surat.index');
+        Route::GET('/show/{id}', [PersetujuanController::class, 'show'])->name('persetujuan-surat.show');
+    });
+
     Route::resource('drafter', DrafterController::class);
     Route::resource('verifikator', VerifikatorController::class);
     Route::resource('kategori-surat', MasterJenisController::class);

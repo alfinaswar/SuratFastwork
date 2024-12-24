@@ -22,6 +22,10 @@ class Surat extends Model
     {
         return $this->belongsTo(User::class, 'PenerimaSurat', 'id');
     }
+    public function getCatatan()
+    {
+        return $this->hasOne(CatatanSurat::class, 'idSurat', 'id');
+    }
 
     public function getPenulis()
     {

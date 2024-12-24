@@ -43,90 +43,91 @@
             }, 1000);
         </script>
     @endif
+    @push('js')
+        <script>
+            $(document).ready(function() {
+                $('body').on('click', '.btn-delete', function() {
+                    var id = $(this).data('id');
 
-    <script>
-        $(document).ready(function() {
-            $('body').on('click', '.btn-delete', function() {
-                var id = $(this).data('id');
+                    Swal.fire({
+                        title: 'Hapus Data',
+                        text: "Anda Ingin Menghapus Data?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, Hapus'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: '{{ route('drafter.destroy', ':id') }}'.replace(':id', id),
+                                type: 'DELETE',
+                                data: {
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                success: function(response) {
+                                    Swal.fire(
+                                        'Dihapus',
+                                        'Data Berhasil Dihapus',
+                                        'success'
+                                    );
 
-                Swal.fire({
-                    title: 'Hapus Data',
-                    text: "Anda Ingin Menghapus Data?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Hapus'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: '{{ route('drafter.destroy', ':id') }}'.replace(':id', id),
-                            type: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire(
-                                    'Dihapus',
-                                    'Data Berhasil Dihapus',
-                                    'success'
-                                );
-
-                                $('#datatable').DataTable().ajax.reload();
-                            },
-                            error: function(xhr) {
-                                Swal.fire(
-                                    'Gagal!',
-                                    xhr.responseJSON.message || 'Gagal',
-                                    'error'
-                                );
-                                console.log(xhr.responseText);
-                            }
-                        });
-                    }
-                });
-            });
-
-            var dataTable = function() {
-                var table = $('#datatable');
-                table.DataTable({
-                    responsive: true,
-                    serverSide: true,
-                    bDestroy: true,
-                    processing: true,
-                    language: {
-                        processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Memuat...</span> ',
-                        paginate: {
-                            next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
-                            previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+                                    $('#datatable').DataTable().ajax.reload();
+                                },
+                                error: function(xhr) {
+                                    Swal.fire(
+                                        'Gagal!',
+                                        xhr.responseJSON.message || 'Gagal',
+                                        'error'
+                                    );
+                                    console.log(xhr.responseText);
+                                }
+                            });
                         }
-                    },
-                    ajax: "{{ route('drafter.index') }}",
-                    columns: [{
-                            data: 'DT_RowIndex',
-                            name: 'DT_RowIndex'
-                        },
-                        {
-                            data: 'NomorSurat',
-                            name: 'NomorSurat'
-                        },
-                        {
-                            data: 'Perihal',
-                            name: 'Perihal'
-                        },
-                        {
-                            data: 'Status',
-                            name: 'Status'
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
-                            orderable: false,
-                            searchable: false
-                        },
-                    ]
+                    });
                 });
-            };
-            dataTable();
-            $(".multi-select").select2();
-        });
-    </script>
+
+                var dataTable = function() {
+                    var table = $('#datatable');
+                    table.DataTable({
+                        responsive: true,
+                        serverSide: true,
+                        bDestroy: true,
+                        processing: true,
+                        language: {
+                            processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Memuat...</span> ',
+                            paginate: {
+                                next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                                previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+                            }
+                        },
+                        ajax: "{{ route('drafter.index') }}",
+                        columns: [{
+                                data: 'DT_RowIndex',
+                                name: 'DT_RowIndex'
+                            },
+                            {
+                                data: 'NomorSurat',
+                                name: 'NomorSurat'
+                            },
+                            {
+                                data: 'Perihal',
+                                name: 'Perihal'
+                            },
+                            {
+                                data: 'Status',
+                                name: 'Status'
+                            },
+                            {
+                                data: 'action',
+                                name: 'action',
+                                orderable: false,
+                                searchable: false
+                            },
+                        ]
+                    });
+                };
+                dataTable();
+                $(".multi-select").select2();
+            });
+        </script>
+    @endpush
 @endsection
