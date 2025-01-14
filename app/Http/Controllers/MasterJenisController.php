@@ -7,6 +7,7 @@ use App\Models\Surat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class MasterJenisController extends Controller
 {
@@ -49,26 +50,33 @@ class MasterJenisController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $validatedData = $request->validate([
             'idJenis' => 'required|string|max:50',
             'JenisSurat' => 'required|string|max:255',
             'Aktif' => 'required|in:Y,N',
+            'FormatSurat' => 'required|file|mimes:doc,docx,pdf',
+        ]);
+        if ($request->hasFile('FormatSurat')) {
+            $file = $request->file('FormatSurat');
+            $file->storeAs('public/FormatSurat', $file->getClientOriginalName());
+            $validatedData['FormatSurat'] = $file->getClientOriginalName();
+        }
+
+
+        $masterJenis = MasterJenis::create([
+            'idJenis' => $validatedData['idJenis'],
+            'JenisSurat' => $validatedData['JenisSurat'],
+            'Aktif' => $validatedData['Aktif'],
+            'FormatSurat' => $validatedData['FormatSurat'],
+            'DibuatOleh' => auth()->user()->id,
         ]);
 
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-        $data = $request->all();
-        $data['DibuatOleh'] = auth()->user()->id;
-        $masterJenis = MasterJenis::create($data);
         activity()
             ->causedBy(auth()->user())
             ->performedOn($masterJenis)
-            ->withProperties(['JenisSurat' => $request->JenisSurat])
-            ->log('Menambahkan Jenis Surat Baru: "' . $request->JenisSurat . '"');
+            ->withProperties(['JenisSurat' => $validatedData['JenisSurat']])
+            ->log('Menambahkan Jenis Surat Baru: "' . $validatedData['JenisSurat'] . '"');
+
         return redirect()->route('kategori-surat.index')->with('success', 'Jenis Surat Berhasil Ditambahkan');
     }
 
@@ -143,5 +151,31 @@ class MasterJenisController extends Controller
         } else {
             return response()->json(['message' => 'Jenis Surat tidak ditemukan'], 404);
         }
+    }
+    public function generateWord()
+    {
+        // dd(123);
+        $templatePath = storage_path('app/public/FormatSurat/Nama.docx');
+        $savePath = storage_path('app/public/generated_word.docx');
+        if (!file_exists($templatePath)) {
+            return response()->json(['message' => 'Template tidak ditemukan'], 404);
+        }
+
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        $data = [
+            'Nama' => 'Alfin',
+            'Email' => 'alfin@example.com',
+            'Alamat' => 'Jl. Contoh No. 123, Kota Laravel'
+        ];
+        // foreach ($data as $key => $value) {
+        //     $templateProcessor->setValue("<<$key>>", $value);
+        // }
+        foreach ($data as $key => $value) {
+            $templateProcessor->setValue($key, $value);
+        }
+        $templateProcessor->saveAs($savePath);
+
+        return response()->download($savePath)->deleteFileAfterSend(true);
     }
 }

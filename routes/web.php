@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DrafterController;
+use App\Http\Controllers\FieldController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MasterJenisController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SuratController;
+use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifikatorController;
 use Illuminate\Support\Facades\Route;
@@ -39,11 +41,15 @@ Route::group(['middleware' => ['auth']], function () {
         Route::GET('/', [PersetujuanController::class, 'index'])->name('persetujuan-surat.index');
         Route::GET('/show/{id}', [PersetujuanController::class, 'show'])->name('persetujuan-surat.show');
     });
-
+    Route::resource('templates', TemplateController::class);
     Route::resource('drafter', DrafterController::class);
     Route::resource('verifikator', VerifikatorController::class);
     Route::resource('kategori-surat', MasterJenisController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
     Route::resource('products', ProductController::class);
+
+    Route::get('/fields', [FieldController::class, 'index'])->name('fields.index');
+    Route::get('/generate-word', [MasterJenisController::class, 'generateWord']);
+
 });

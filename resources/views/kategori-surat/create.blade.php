@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form action="{{ route('kategori-surat.store') }}" method="POST">
+                    <form action="{{ route('kategori-surat.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-sm-6 m-b30">
@@ -53,6 +53,13 @@
                                 @enderror
                             </div>
 
+                            <div class="col-sm-6 m-b30">
+                                <label class="form-label">Format Surat</label>
+                                <input type="file" name="FormatSurat" class="form-control" accept=".docx, .doc, .pdf">
+                                @error('FormatSurat')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
 
                         </div>
 
