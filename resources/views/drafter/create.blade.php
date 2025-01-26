@@ -15,7 +15,7 @@
                                     <div class="form-group mb-3">
                                         <label for="tanggal_surat">Kategori Surat</label>
                                         <select class="form-control" data-trigger name="idJenis"
-                                            id="choices-multiple-default" placeholder="This is a placeholder" multiple>
+                                            id="choices-multiple-default" placeholder="This is a placeholder">
                                             @foreach ($kategori as $i)
                                                 <option value="{{ $i->id }}">{{ $i->JenisSurat }}</option>
                                             @endforeach

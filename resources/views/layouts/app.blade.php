@@ -300,7 +300,7 @@
                         </li>
 
                         <li>
-                            <a href="template-surat.html">
+                            <a href="{{ route('templates.index') }}">
                                 <i data-feather="layout"></i>
                                 <span data-key="t-template-surat">Template Surat</span>
                             </a>

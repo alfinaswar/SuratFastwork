@@ -7,6 +7,7 @@ use App\Models\Surat;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpWord\TemplateProcessor;
 use Yajra\DataTables\Facades\DataTables;
 
 class DrafterController extends Controller
@@ -31,8 +32,6 @@ class DrafterController extends Controller
                         $btnDelete = '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-md btn-delete" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
                         return $btnEdit . ' ' . $btnDelete;
                     }
-
-
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -55,7 +54,6 @@ class DrafterController extends Controller
      */
     public function store(Request $request)
     {
-        // dd(223);
         $validator = Validator::make($request->all(), [
             'idJenis' => 'required',
             'TanggalSurat' => 'required',
@@ -75,7 +73,7 @@ class DrafterController extends Controller
         }
         $data = $request->all();
 
-        $surat = Surat::create([
+        $surat = Surat::create(attributes: [
             'idJenis' => $data['idJenis'],
             'NomorSurat' => $this->GenerateKode(),
             'TanggalSurat' => $data['TanggalSurat'],
@@ -87,13 +85,32 @@ class DrafterController extends Controller
             'Isi' => $data['Isi'],
             'DibuatOleh' => auth()->user()->id,
         ]);
+
+        $cekKategori = MasterJenis::find($request->idJenis);
+        $templatePath = storage_path('app/public/FormatSurat/' . $cekKategori->FormatSurat);
+        $savePath = storage_path('app/public/surat' . $cekKategori->JenisSurat . '.docx');
+        if (!file_exists($templatePath)) {
+            return redirect()->route('drafter.index')->withErrors(['message' => 'Template tidak ditemukan']);
+        }
+
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        $dataWord = [
+            'Nama' => $request->Lampiran,
+            'Isi' => $request->Isi,
+        ];
+        foreach ($dataWord as $key => $value) {
+            $templateProcessor->setValue($key, $value);
+        }
+        $templateProcessor->saveAs($savePath);
+
         activity()
             ->causedBy(auth()->user())
             ->performedOn($surat)
             ->withProperties(['Perihal' => $data['Perihal']])
             ->log('Menambahkan Surat Baru dengan Nomor: "' . $this->GenerateKode() . '"');
 
-        return redirect()->route('drafter.index')->with('success', 'Surat Berhasil Ditambahkan');
+        return redirect()->route('drafter.index')->with('success', 'Surat berhasil disimpan.');
     }
 
     /**
