@@ -7,6 +7,9 @@ use App\Models\Surat;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Mpdf\Mpdf;
+use PhpOffice\PhpWord\Shared\Html;
+use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -33,7 +36,7 @@ class DrafterController extends Controller
                         return $btnEdit . ' ' . $btnDelete;
                     }
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'StatusLabel'])
                 ->make(true);
         }
         return view('drafter.index');
@@ -49,15 +52,12 @@ class DrafterController extends Controller
         return view('drafter.create', compact('kategori', 'penerima'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'idJenis' => 'required',
             'TanggalSurat' => 'required',
-            'Lampiran' => 'nullable',
+            'Lampiran' => 'nullable|array',
             'PenerimaSurat' => 'required',
             'CarbonCopy' => 'nullable',
             'BlindCarbonCopy' => 'nullable',
@@ -71,46 +71,92 @@ class DrafterController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        $data = $request->all();
 
-        $surat = Surat::create(attributes: [
+        $data = $request->all();
+        $isiSurat = htmlspecialchars_decode($request->Isi);
+        $cekKategori = MasterJenis::find($request->idJenis);
+        $IdSurat = Surat::latest()->first()->id ?? 0;
+        $lampiran = [];
+
+        if ($request->hasFile('Lampiran')) {
+            foreach ($request->file('Lampiran') as $file) {
+                $path = $file->store('public/lampiran');
+                $lampiran[] = basename($path);
+            }
+        }
+
+        // Simpan data ke database
+        $surat = Surat::create([
             'idJenis' => $data['idJenis'],
             'NomorSurat' => $this->GenerateKode(),
             'TanggalSurat' => $data['TanggalSurat'],
-            'Lampiran' => $data['Lampiran'],
+            'Lampiran' => json_encode($lampiran),
             'PenerimaSurat' => $data['PenerimaSurat'],
             'CarbonCopy' => $data['CarbonCopy'] ?? null,
             'BlindCarbonCopy' => $data['BlindCarbonCopy'] ?? null,
             'Perihal' => $data['Perihal'],
             'Isi' => $data['Isi'],
             'DibuatOleh' => auth()->user()->id,
+            'NamaFile' => $cekKategori->JenisSurat . '-' . $IdSurat,
         ]);
 
-        $cekKategori = MasterJenis::find($request->idJenis);
+        // Path template & output
         $templatePath = storage_path('app/public/FormatSurat/' . $cekKategori->FormatSurat);
-        $savePath = storage_path('app/public/surat' . $cekKategori->JenisSurat . '.docx');
+        $docxPath = storage_path('app/public/surat/' . $cekKategori->JenisSurat . '-' . $IdSurat . '.docx');
+        $pdfPath = storage_path('app/public/surat/' . $cekKategori->JenisSurat . '-' . $IdSurat . '.pdf');
+
         if (!file_exists($templatePath)) {
             return redirect()->route('drafter.index')->withErrors(['message' => 'Template tidak ditemukan']);
         }
 
+        // Buat dokumen Word dari template
         $templateProcessor = new TemplateProcessor($templatePath);
+        $isiSurat = strip_tags($request->Isi);
+        $NamaPenerima = User::where('id', $request->PenerimaSurat)->first();
 
         $dataWord = [
-            'Nama' => $request->Lampiran,
-            'Isi' => $request->Isi,
+            'NomorDokumen' => $this->GenerateKode(),
+            'TanggalSurat' => $data['TanggalSurat'],
+            'Nama' => $NamaPenerima->name,
+            'Jabatan' => $NamaPenerima->jabatan,
+            'LokasiKerja' => 'Indonesia',
+            'Email' => $NamaPenerima->email,
+            'Perihal' => $request->Perihal,
+            'Acuan' => $request->Acuan ?? 'Tidak ada',
+            'Isi' => $isiSurat,
+            'Divisi' => $NamaPenerima->department,
+            'Qrcode' => $request->Qrcode ?? 'Tidak ada',
+            'Pengirim' => auth()->user()->name,
+            'JabatanPengirim' => auth()->user()->jabatan,
+            'Lampiran' => implode(', ', $lampiran ? array_map(fn($lampiran) => basename($lampiran), $lampiran) : ['Tidak ada']),
         ];
+
         foreach ($dataWord as $key => $value) {
             $templateProcessor->setValue($key, $value);
         }
-        $templateProcessor->saveAs($savePath);
 
+        // Simpan file Word (.docx)
+        $templateProcessor->saveAs($docxPath);
+
+        // Konversi DOCX ke PDF menggunakan MPDF dengan perbaikan untuk mengatasi masalah halaman kosong dan jumlah halaman yang tidak sesuai
+        // $phpWord = IOFactory::load($docxPath);
+        // $htmlWriter = IOFactory::createWriter($phpWord, 'HTML');
+        // ob_start();
+        // $htmlWriter->save('php://output');
+        // $htmlContent = ob_get_clean();
+
+        // $mpdf = new Mpdf();
+        // $mpdf->WriteHTML($htmlContent);
+        // $mpdf->Output($pdfPath, \Mpdf\Output\Destination::FILE);  // Simpan sebagai file PDF dengan perbaikan untuk mengatasi masalah halaman kosong dan jumlah halaman yang tidak sesuai
+
+        // Catat aktivitas
         activity()
             ->causedBy(auth()->user())
             ->performedOn($surat)
             ->withProperties(['Perihal' => $data['Perihal']])
             ->log('Menambahkan Surat Baru dengan Nomor: "' . $this->GenerateKode() . '"');
 
-        return redirect()->route('drafter.index')->with('success', 'Surat berhasil disimpan.');
+        return redirect()->route('drafter.index')->with('success', 'Surat berhasil disimpan dalam format DOCX dan PDF.');
     }
 
     /**

@@ -141,10 +141,11 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <div class="card bg-danger border-info text-whiite">
+            <div class="card bg-info border-info text-whiite">
                 <div class="card-body">
                     <h5 class="mb-3 text-white fw-bold">Poin Revisi</h5>
-                    <p class="card-text text-white">{{ $surat->getCatatan->Catatan ?? '' }}</p>
+                    <p class="card-text text-white">{!! $surat->getCatatan->Catatan ?? '' !!}</p>
+                    <p class="card-text text-white">Di Verifikasi Oleh : </p>
                 </div>
             </div>
         </div>

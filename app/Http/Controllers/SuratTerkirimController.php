@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CatatanSurat;
 use App\Models\Surat;
+use App\Models\SuratTerkirim;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use ZipArchive;
 
-class VerifikatorController extends Controller
+class SuratTerkirimController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +16,11 @@ class VerifikatorController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Surat::latest()->get();
+            $data = Surat::where('Status', 'Sent')->where('SentBy', auth()->user()->id)->latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
-                    $btnShow = '<a href="' . route('verifikator.show', $row->id) . '" class="btn btn-info btn-md btn-show" title="Show"><i class="fas fa-eye"></i></a>';
+                    $btnShow = '<a href="' . route('surat-terkirim.download', $row->id) . '" class="btn btn-info btn-md btn-show" title="Show"><i class="fas fa-download"></i></a>';
                     return $btnShow;
                 })
                 ->addColumn('StatusLabel', function ($row) {
@@ -54,7 +54,7 @@ class VerifikatorController extends Controller
                 ->rawColumns(['action', 'StatusLabel'])
                 ->make(true);
         }
-        return view('verifikator.index');
+        return view('surat-terkirim.index');
     }
 
     /**
@@ -70,45 +70,7 @@ class VerifikatorController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-        $validator = Validator::make($request->all(), [
-            'Status' => 'required|string',
-            'Catatan' => 'nullable|string',
-            'idsurat' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-        $data = $request->all();
-
-        $surat = Surat::find($request->idsurat);
-        // dd($surat);
-        $surat->update([
-            'Status' => $data['Status'],
-            'VerifiedBy' => auth()->user()->id,
-            'VerifiedAt' => now(),
-        ]);
-        $catatanSurat = CatatanSurat::updateOrCreate(
-            ['idSurat' => $data['idsurat']],
-            [
-                'Status' => $data['Status'],
-                'Catatan' => $data['Catatan'] ?? null,
-                'DibuatOleh' => auth()->user()->id,
-                'DieditOleh' => auth()->user()->id,
-            ]
-        );
-
-        activity()
-            ->causedBy(auth()->user())
-            ->performedOn($catatanSurat)
-            ->withProperties(['status' => $data['Status'], 'revisi' => $data['Catatan']])
-            ->log('Status dengan nomor: ' . $surat->NomorSurat . ' surat telah di ' . $data['Status']);
-
-        return redirect()->route('verifikator.index')->with('success', 'Status Surat Berhasil Diperbarui');
+        //
     }
 
     /**
@@ -120,37 +82,64 @@ class VerifikatorController extends Controller
             $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
         }])->findOrFail($id);
         // dd($surat);
-        return view('verifikator.show', compact('surat'));
+        return view('surat-terkirim.show', compact('surat'));
+    }
+
+    public function download($id)
+    {
+        $surat = Surat::with(['getPenerima', 'getPenulis'])->findOrFail($id);
+
+        // cek folder penyimpanan zip
+        $zipDir = storage_path('app/public/berkas/');
+        if (!file_exists($zipDir)) {
+            mkdir($zipDir, 0775, true);
+        }
+
+        // Nama dan path file ZIP
+        $zipName = 'surat_' . $surat->id . '.zip';
+        $zipPath = $zipDir . $zipName;
+
+        // Buat file ZIP
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE) !== true) {
+            return back()->withErrors(['message' => 'Gagal membuat file ZIP']);
+        }
+
+        // Tambahkan file surat utama (Word/PDF)
+        $fileSuratPath = storage_path('app/public/surat/' . $surat->NamaFile . '.docx');  // Bisa juga PDF
+        if (file_exists($fileSuratPath)) {
+            $zip->addFile($fileSuratPath, basename($fileSuratPath));
+        }
+
+        // Tambahkan lampiran kalo ada
+        $lampiranArray = json_decode($surat->Lampiran, true) ?? [];
+        // dd($lampiranArray);
+        if (!empty($lampiranArray)) {
+            foreach ($lampiranArray as $lampiran) {
+                $lampiranPath = storage_path('app/public/lampiran/' . $lampiran);
+                if (file_exists($lampiranPath)) {
+                    $zip->addFile($lampiranPath, 'lampiran/' . basename($lampiran));
+                }
+            }
+        }
+        $zip->close();
+
+        // download dan hapus setelah terkirim
+        return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(SuratTerkirim $suratTerkirim)
     {
         //
-    }
-
-    public function downloadPreview($id)
-    {
-        $surat = Surat::with('getPenerima', 'getPenulis')->findOrFail($id);
-        $file = storage_path('app/public/surat/' . $surat->NamaFile . '.docx');
-        if (file_exists($file)) {
-            activity()
-                ->causedBy(auth()->user())
-                ->performedOn($surat)
-                ->withProperties(['file' => $file])
-                ->log('Mengunduh pratinjau surat: ' . $surat->NomorSurat);
-            return response()->download($file, $surat->NamaFile . '.docx');
-        } else {
-            abort(404, 'File tidak ditemukan.');
-        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, SuratTerkirim $suratTerkirim)
     {
         //
     }
@@ -158,7 +147,7 @@ class VerifikatorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(SuratTerkirim $suratTerkirim)
     {
         //
     }

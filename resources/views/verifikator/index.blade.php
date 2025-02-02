@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="d-flex justify-content-end align-items-center mb-4 flex-wrap">
-        <a href="{{ route('drafter.create') }}" class="btn btn-primary me-3 btn-sm"><i class="fas fa-plus me-2"></i>Tambah</a>
+        {{-- <a href="{{ route('drafter.create') }}" class="btn btn-primary me-3 btn-sm"><i class="fas fa-plus me-2"></i>Tambah</a> --}}
     </div>
 
     <div class="row">
@@ -75,8 +75,8 @@
                             name: 'Perihal'
                         },
                         {
-                            data: 'Status',
-                            name: 'Status'
+                            data: 'StatusLabel',
+                            name: 'StatusLabel'
                         },
                         {
                             data: 'action',

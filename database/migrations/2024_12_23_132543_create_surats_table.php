@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('surats', function (Blueprint $table) {
             $table->id();
             $table->string('idJenis')->nullable();
-            $table->string('NomorSurat')->unique();
+            $table->string('NomorSurat')->nullable();
             $table->date('TanggalSurat')->nullable();
             $table->text('Lampiran')->nullable()->nullable();
             $table->string('PenerimaSurat')->nullable();

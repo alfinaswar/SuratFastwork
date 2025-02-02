@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- <div class="d-flex justify-content-end align-items-center mb-4 flex-wrap">
-        <a href="{{ route('drafter.create') }}" class="btn btn-primary me-3 btn-sm"><i class="fas fa-plus me-2"></i>Tambah</a>
-    </div> --}}
+    <div class="d-flex justify-content-end align-items-center mb-4 flex-wrap">
+        {{-- <a href="{{ route('drafter.create') }}" class="btn btn-primary me-3 btn-sm"><i class="fas fa-plus me-2"></i>Tambah</a> --}}
+    </div>
 
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title">Persetujuan Surat</h4>
+                    <h4 class="card-title">Verifikasi Surat</h4>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -40,7 +40,18 @@
                     text: "{!! \Session::get('success') !!}",
                     icon: "success"
                 });
-            }, 500);
+            }, 1000);
+        </script>
+    @endif
+    @if (session()->has('error'))
+        <script>
+            setTimeout(function() {
+                swal.fire({
+                    title: "{{ __('Error!') }}",
+                    text: "{!! \Session::get('error') !!}",
+                    icon: "error"
+                });
+            }, 1000);
         </script>
     @endif
 
@@ -61,7 +72,7 @@
                             previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
                         }
                     },
-                    ajax: "{{ route('persetujuan-surat.index') }}",
+                    ajax: "{{ route('surat-terkirim.index') }}",
                     columns: [{
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex'
@@ -88,7 +99,7 @@
                 });
             };
             dataTable();
-
+            $(".multi-select").select2();
         });
     </script>
 @endsection

@@ -9,6 +9,7 @@ use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SuratController;
+use App\Http\Controllers\SuratTerkirimController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifikatorController;
@@ -40,6 +41,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::prefix('persetujuan-surat')->group(function () {
         Route::GET('/', [PersetujuanController::class, 'index'])->name('persetujuan-surat.index');
         Route::GET('/show/{id}', [PersetujuanController::class, 'show'])->name('persetujuan-surat.show');
+        Route::GET('/approve/{id}', [PersetujuanController::class, 'approve'])->name('persetujuan.approve');
+        Route::GET('/reject/{id}', [PersetujuanController::class, 'reject'])->name('persetujuan.reject');
+    });
+    Route::prefix('verifikator')->group(function () {
+        Route::GET('/download-preview/{id}', [VerifikatorController::class, 'show'])->name('verifikator.preview');
+        Route::GET('/download-preview/{id}', [VerifikatorController::class, 'downloadPreview'])->name('verifikator.download-preview');
+    });
+    Route::prefix('surat-terkirim')->group(function () {
+        Route::GET('/download-surat/{id}', [SuratTerkirimController::class, 'download'])->name('surat-terkirim.download');
     });
     Route::resource('templates', TemplateController::class);
     Route::resource('drafter', DrafterController::class);
@@ -48,8 +58,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('surat-terkirim', SuratTerkirimController::class);
 
     Route::get('/fields', [FieldController::class, 'index'])->name('fields.index');
     Route::get('/generate-word', [MasterJenisController::class, 'generateWord']);
-
 });

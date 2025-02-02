@@ -272,7 +272,7 @@
                         </li>
 
                         <li>
-                            <a href="surat-terkirim.html">
+                            <a href="{{ route('surat-terkirim.index') }}">
                                 <i data-feather="send"></i>
                                 <span data-key="t-surat-terkirim">Surat Terkirim</span>
                             </a>
@@ -285,19 +285,7 @@
                             </a>
                         </li>
 
-                        <li>
-                            <a href="surat-cc.html">
-                                <i data-feather="copy"></i>
-                                <span data-key="t-surat-cc">Surat CC</span>
-                            </a>
-                        </li>
 
-                        <li>
-                            <a href="surat-bc.html">
-                                <i data-feather="eye-off"></i>
-                                <span data-key="t-surat-bc">Surat BC</span>
-                            </a>
-                        </li>
 
                         <li>
                             <a href="{{ route('templates.index') }}">
