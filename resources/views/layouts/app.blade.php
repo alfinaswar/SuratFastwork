@@ -103,109 +103,9 @@
                             </form>
                         </div>
                     </div>
-                    <div class="dropdown d-inline-block">
-                        <button type="button" class="btn header-item noti-icon position-relative"
-                            id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
-                            <i data-feather="bell" class="icon-lg"></i>
-                            <span class="badge bg-danger rounded-pill">5</span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-                            aria-labelledby="page-header-notifications-dropdown">
-                            <div class="p-3">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h6 class="m-0"> Notifications </h6>
-                                    </div>
-                                    <div class="col-auto">
-                                        <a href="#!" class="small text-reset text-decoration-underline"> Unread
-                                            (3)</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div data-simplebar style="max-height: 230px;">
-                                <a href="#!" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <div class="flex-shrink-0 me-3">
-                                            <img src="{{ asset('') }}assets/images/users/avatar-3.jpg"
-                                                class="rounded-circle avatar-sm" alt="user-pic">
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">James Lemire</h6>
-                                            <div class="font-size-13 text-muted">
-                                                <p class="mb-1">It will seem like simplified English.</p>
-                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>1 hour
-                                                        ago</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="#!" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <div class="flex-shrink-0 avatar-sm me-3">
-                                            <span class="avatar-title bg-primary rounded-circle font-size-16">
-                                                <i class="bx bx-cart"></i>
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">Your order is placed</h6>
-                                            <div class="font-size-13 text-muted">
-                                                <p class="mb-1">If several languages coalesce the grammar</p>
-                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>3 min
-                                                        ago</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a href="#!" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <div class="flex-shrink-0 avatar-sm me-3">
-                                            <span class="avatar-title bg-success rounded-circle font-size-16">
-                                                <i class="bx bx-badge-check"></i>
-                                            </span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">Your item is shipped</h6>
-                                            <div class="font-size-13 text-muted">
-                                                <p class="mb-1">If several languages coalesce the grammar</p>
-                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>3 min
-                                                        ago</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
 
-                                <a href="#!" class="text-reset notification-item">
-                                    <div class="d-flex">
-                                        <div class="flex-shrink-0 me-3">
-                                            <img src="{{ asset('') }}assets/images/users/avatar-6.jpg"
-                                                class="rounded-circle avatar-sm" alt="user-pic">
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-1">Salena Layfield</h6>
-                                            <div class="font-size-13 text-muted">
-                                                <p class="mb-1">As a skeptical Cambridge friend of mine occidental.
-                                                </p>
-                                                <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span>1 hour
-                                                        ago</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="p-2 border-top d-grid">
-                                <a class="btn btn-sm btn-link font-size-14 text-center" href="javascript:void(0)">
-                                    <i class="mdi mdi-arrow-right-circle me-1"></i> <span>View More..</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="dropdown d-inline-block">
-                        <button type="button" class="btn header-item right-bar-toggle me-2">
-                            <i data-feather="settings" class="icon-lg"></i>
-                        </button>
-                    </div>
+
 
                     <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item bg-light-subtle border-start border-end"
@@ -218,13 +118,16 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-end">
                             <!-- item-->
-                            <a class="dropdown-item" href="apps-contacts-profile.html"><i
-                                    class="mdi mdi mdi-face-man font-size-16 align-middle me-1"></i> Profile</a>
-                            <a class="dropdown-item" href="auth-lock-screen.html"><i
-                                    class="mdi mdi-lock font-size-16 align-middle me-1"></i> Lock Screen</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="auth-logout.html"><i
-                                    class="mdi mdi-logout font-size-16 align-middle me-1"></i> Logout</a>
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                                <i class="mdi mdi-logout font-size-16 align-middle me-1"></i> Logout
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
                         </div>
                     </div>
 
@@ -243,88 +146,80 @@
                     <ul class="metismenu list-unstyled" id="side-menu">
                         <li class="menu-title" data-key="t-menu">Menu</li>
 
-                        <li>
-                            <a href="{{ route('home') }}">
-                                <i data-feather="home"></i>
-                                <span data-key="t-dashboard">Dashboard</span>
-                            </a>
-                        </li>
+                        @can('dashboard')
+                            <li>
+                                <a href="{{ route('home') }}">
+                                    <i data-feather="home"></i>
+                                    <span data-key="t-dashboard">Dashboard</span>
+                                </a>
+                            </li>
+                        @endcan
 
-                        <li>
-                            <a href="{{ route('drafter.index') }}">
-                                <i data-feather="file-text"></i>
-                                <span data-key="t-draft-surat">Draft Surat</span>
-                            </a>
-                        </li>
+                        @can('draft')
+                            <li>
+                                <a href="{{ route('drafter.index') }}">
+                                    <i data-feather="file-text"></i>
+                                    <span data-key="t-draft-surat">Draft Surat</span>
+                                </a>
+                            </li>
+                        @endcan
 
-                        <li>
-                            <a href="{{ route('verifikator.index') }}">
-                                <i data-feather="check-square"></i>
-                                <span data-key="t-verifikasi-surat">Verifikasi Surat</span>
-                            </a>
-                        </li>
+                        @can('verify')
+                            <li>
+                                <a href="{{ route('verifikator.index') }}">
+                                    <i data-feather="check-square"></i>
+                                    <span data-key="t-verifikasi-surat">Verifikasi Surat</span>
+                                </a>
+                            </li>
+                        @endcan
 
-                        <li>
-                            <a href="{{ route('persetujuan-surat.index') }}">
-                                <i data-feather="thumbs-up"></i>
-                                <span data-key="t-persetujuan-surat">Persetujuan Surat</span>
-                            </a>
-                        </li>
+                        @can('approval')
+                            <li>
+                                <a href="{{ route('persetujuan-surat.index') }}">
+                                    <i data-feather="thumbs-up"></i>
+                                    <span data-key="t-persetujuan-surat">Persetujuan Surat</span>
+                                </a>
+                            </li>
+                        @endcan
 
-                        <li>
-                            <a href="{{ route('surat-terkirim.index') }}">
-                                <i data-feather="send"></i>
-                                <span data-key="t-surat-terkirim">Surat Terkirim</span>
-                            </a>
-                        </li>
+                        @can('sent-view')
+                            <li>
+                                <a href="{{ route('surat-terkirim.index') }}">
+                                    <i data-feather="send"></i>
+                                    <span data-key="t-surat-terkirim">Surat Terkirim</span>
+                                </a>
+                            </li>
+                        @endcan
 
-                        <li>
-                            <a href="surat-masuk.html">
-                                <i data-feather="inbox"></i>
-                                <span data-key="t-surat-masuk">Surat Masuk</span>
-                            </a>
-                        </li>
+                        @can('inbox-view')
+                            <li>
+                                <a href="{{ route('surat-masuk.index') }}">
+                                    <i data-feather="inbox"></i>
+                                    <span data-key="t-surat-masuk">Surat Masuk</span>
+                                </a>
+                            </li>
+                        @endcan
 
+                        @can('pengaturan-website')
+                            <li>
+                                <a href="javascript: void(0);" class="has-arrow">
+                                    <i data-feather="settings"></i>
+                                    <span data-key="t-multi-level">Pengaturan Website</span>
+                                </a>
+                                <ul class="sub-menu" aria-expanded="true">
+                                    <li><a href="{{ route('users.index') }}" data-key="t-level-1-1">Manajemen Users</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('roles.index') }}" data-key="t-level-1-2">Manajemen Role</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('kategori-surat.index') }}" data-key="t-level-1-2">Master Jenis
+                                            Surat</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endcan
 
-
-                        <li>
-                            <a href="{{ route('templates.index') }}">
-                                <i data-feather="layout"></i>
-                                <span data-key="t-template-surat">Template Surat</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow">
-                                <i data-feather="settings"></i>
-                                <span data-key="t-multi-level">Pengaturan Website</span>
-                            </a>
-                            <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="{{ route('users.index') }}" data-key="t-level-1-1">Manajemen Users</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('roles.index') }}" data-key="t-level-1-2">Manajemen Role</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('kategori-surat.index') }}" data-key="t-level-1-2">Master Jenis
-                                        Surat</a>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li>
-                            <a href="log-aktivitas.html">
-                                <i data-feather="activity"></i>
-                                <span data-key="t-log-aktivitas">Log Aktivitas</span>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="laporan.html">
-                                <i data-feather="bar-chart-2"></i>
-                                <span data-key="t-laporan">Laporan</span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
 

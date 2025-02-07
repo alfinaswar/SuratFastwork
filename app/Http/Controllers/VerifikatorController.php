@@ -116,9 +116,13 @@ class VerifikatorController extends Controller
      */
     public function show($id)
     {
-        $surat = Surat::with(['getPenerima', 'getPenulis', 'getCatatan' => function ($query) use ($id) {
-            $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
-        }])->findOrFail($id);
+        $surat = Surat::with([
+            'getPenerima',
+            'getPenulis',
+            'getCatatan' => function ($query) use ($id) {
+                $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
+            }
+        ])->findOrFail($id);
         // dd($surat);
         return view('verifikator.show', compact('surat'));
     }
@@ -134,6 +138,7 @@ class VerifikatorController extends Controller
     public function downloadPreview($id)
     {
         $surat = Surat::with('getPenerima', 'getPenulis')->findOrFail($id);
+        // dd($surat);
         $file = storage_path('app/public/surat/' . $surat->NamaFile . '.docx');
         if (file_exists($file)) {
             activity()
