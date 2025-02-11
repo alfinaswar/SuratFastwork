@@ -216,6 +216,14 @@
                                         <a href="{{ route('kategori-surat.index') }}" data-key="t-level-1-2">Master Jenis
                                             Surat</a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('master-penerima-ext.index') }}" data-key="t-level-1-2">Master
+                                            Master Penerima Eksternal</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('master-field.index') }}" data-key="t-level-1-2">Master
+                                            Master Fields</a>
+                                    </li>
                                 </ul>
                             </li>
                         @endcan

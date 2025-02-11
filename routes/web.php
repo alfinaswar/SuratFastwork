@@ -4,7 +4,9 @@ use App\Http\Controllers\DrafterController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\MasterFieldsController;
 use App\Http\Controllers\MasterJenisController;
+use App\Http\Controllers\MasterPenerimaEksternalController;
 use App\Http\Controllers\PersetujuanController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
@@ -66,6 +68,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('products', ProductController::class);
     Route::resource('surat-terkirim', SuratTerkirimController::class);
     Route::resource('surat-masuk', SuratMasukController::class);
+    Route::resource('master-penerima-ext', MasterPenerimaEksternalController::class);
+    Route::resource('master-field', MasterFieldsController::class);
+
 
     Route::get('/fields', [FieldController::class, 'index'])->name('fields.index');
     Route::get('/generate-word', [MasterJenisController::class, 'generateWord']);
