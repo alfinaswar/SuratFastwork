@@ -6,13 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MasterJenis extends Model
+class AjustField extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = 'master_jenis';
+    protected $table = 'ajust_fields';
     protected $guarded = ['id'];
-    public function getField()
-    {
-        return $this->belongsTo(AjustField::class, 'id', 'JenisSurat');
-    }
 }

@@ -8,7 +8,7 @@
                     <div class="card-header">{{ __('Tambah Surat') }}</div>
 
                     <div class="card-body">
-                        <form action="{{ route('drafter.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('master-field.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="row">
                                 <div class="col-6">

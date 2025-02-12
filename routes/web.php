@@ -59,6 +59,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::GET('/read/{id}', [SuratMasukController::class, 'read'])->name('surat-masuk.read');
         Route::DELETE('/delete/{id}', [SuratMasukController::class, 'destroy'])->name('surat-masuk.delete');
     });
+    Route::prefix('master-field')->group(function () {
+        Route::PUT('/update-field/{id}', [MasterFieldsController::class, 'update'])->name('master-field.update');
+    });
+    Route::prefix('kategori-surat')->group(function () {
+        Route::GET('/get-field/{id}', [MasterJenisController::class, 'getField'])->name('kategori-surat.get-field');
+    });
     Route::resource('templates', TemplateController::class);
     Route::resource('drafter', DrafterController::class);
     Route::resource('verifikator', VerifikatorController::class);

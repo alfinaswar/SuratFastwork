@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AjustField;
 use App\Models\MasterJenis;
 use App\Models\Surat;
 use Illuminate\Http\Request;
@@ -44,12 +45,18 @@ class MasterJenisController extends Controller
     {
         return view('kategori-surat.create');
     }
-
+    public function getField($id)
+    {
+        $field = AjustField::where('JenisSurat', $id)->first();
+        return response()->json($field);
+    }
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+
+        // dd($request->all());
         $validatedData = $request->validate([
             'idJenis' => 'required|string|max:50',
             'JenisSurat' => 'required|string|max:255',
@@ -70,12 +77,26 @@ class MasterJenisController extends Controller
             'FormatSurat' => $validatedData['FormatSurat'],
             'DibuatOleh' => auth()->user()->id,
         ]);
-
+        $adjustField = AjustField::updateOrCreate(
+            ['JenisSurat' => $masterJenis->latest()->first()->id],
+            [
+                'PenerimaInternal' => $request->PenerimaInternal,
+                'PenerimaEksternal' => $request->PenerimaEksternal,
+                'CCInternal' => $request->CCInternal,
+                'CCEksternal' => $request->CCEksternal,
+                'BCCInternal' => $request->BCCInternal,
+                'BCEksternal' => $request->BCCEksternal,
+                'DibuatOleh' => auth()->user()->id,
+                'DieditOleh' => auth()->user()->id,
+            ]
+        );
         activity()
             ->causedBy(auth()->user())
             ->performedOn($masterJenis)
             ->withProperties(['JenisSurat' => $validatedData['JenisSurat']])
             ->log('Menambahkan Jenis Surat Baru: "' . $validatedData['JenisSurat'] . '"');
+
+
 
         return redirect()->route('kategori-surat.index')->with('success', 'Jenis Surat Berhasil Ditambahkan');
     }
@@ -93,7 +114,8 @@ class MasterJenisController extends Controller
      */
     public function edit($id)
     {
-        $masterJenis = MasterJenis::find($id);
+        $masterJenis = MasterJenis::with('getField')->find($id);
+        // dd($masterJenis);
         return view('kategori-surat.edit', compact('masterJenis'));
     }
 
@@ -122,6 +144,19 @@ class MasterJenisController extends Controller
         $data = $request->all();
         $data['DiperbaruiOleh'] = auth()->user()->id;
         $masterJenis->update($data);
+        $adjustField = AjustField::updateOrCreate(
+            ['JenisSurat' => $masterJenis->latest()->first()->id],
+            [
+                'PenerimaInternal' => $request->PenerimaInternal,
+                'PenerimaEksternal' => $request->PenerimaEksternal,
+                'CCInternal' => $request->CCInternal,
+                'CCEksternal' => $request->CCEksternal,
+                'BCCInternal' => $request->BCCInternal,
+                'BCEksternal' => $request->BCCEksternal,
+                'DibuatOleh' => auth()->user()->id,
+                'DieditOleh' => auth()->user()->id,
+            ]
+        );
         activity()
             ->causedBy(auth()->user())
             ->performedOn($masterJenis)
@@ -135,7 +170,7 @@ class MasterJenisController extends Controller
      */
     public function destroy($id)
     {
-        $cek = Surat::where('idJenis', $id);
+        $cek = Surat::where('idJenis', $id)->first();
         if ($cek) {
             return response()->json(['message' => 'Jenis Surat Sedang Digunakan'], 404);
         }

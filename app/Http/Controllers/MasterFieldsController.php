@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AjustField;
 use App\Models\MasterFields;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -41,7 +42,16 @@ class MasterFieldsController extends Controller
      */
     public function store(Request $request)
     {
-        $data =
+        $masterField = MasterFields::create($request->all());
+
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($masterField)
+            ->withProperties(['JudulField' => $masterField->JudulField])
+            ->log('Menambahkan Field Baru dengan Judul: "' . $masterField->JudulField . '"');
+
+        return redirect()->route('master-field.index')
+            ->with('success', 'Data Berhasil Ditambahkan');
     }
 
     /**
@@ -55,24 +65,44 @@ class MasterFieldsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MasterFields $masterFields)
+    public function edit($id)
     {
-        //
+        $field = MasterFields::find($id);
+        return view('master.fields.edit', compact('field'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MasterFields $masterFields)
+    public function update(Request $request, $id)
     {
-        //
+        // dd($request->all());
+        $data = $request->all();
+        $data['DieditOleh'] = auth()->user()->id;
+        $field = MasterFields::find($id);
+        $field->update($data);
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($field)
+            ->withProperties(['JudulField' => $field->JudulField])
+            ->log('Mengubah Field dengan Judul: "' . $field->JudulField . '"');
+        return redirect()->route('master-field.index')
+            ->with('success', 'Data Berhasil Diubah');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MasterFields $masterFields)
+    public function destroy($id)
     {
-        //
+        $masterFields = MasterFields::find($id);
+        $masterFields->delete();
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($masterFields)
+            ->withProperties(['JudulField' => $masterFields->JudulField])
+            ->log('Menghapus Field dengan Judul: "' . $masterFields->JudulField . '"');
+        return response()->json(['success' => 'Data Berhasil Dihapus']);
     }
 }
