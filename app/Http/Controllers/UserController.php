@@ -147,7 +147,14 @@ class UserController extends Controller
         return redirect()->back()
             ->with('success', 'User updated successfully');
     }
-
+    public function getUsers($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User Tidak Ditemukan'], 404);
+        }
+        return response()->json($user);
+    }
     /**
      * Remove the specified resource from storage.
      *

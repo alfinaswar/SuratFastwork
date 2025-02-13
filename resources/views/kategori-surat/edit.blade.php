@@ -211,7 +211,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="BCCEksternal" id="YA"
                                     value="YA"
-                                    {{ old('BCCEksternal', $masterJenis->getField->BCCEksternal) == 'YA' ? 'checked' : '' }}>
+                                    {{ old('BCCEksternal', $masterJenis->getField->BCEksternal) == 'YA' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="YA">
                                     Ya
                                 </label>
@@ -219,7 +219,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="BCCEksternal" id="TIDAK"
                                     value="TIDAK"
-                                    {{ old('BCCEksternal', $masterJenis->getField->BCCEksternal) == 'TIDAK' ? 'checked' : '' }}>
+                                    {{ old('BCCEksternal', $masterJenis->getField->BCEksternal) == 'TIDAK' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="TIDAK">
                                     Tidak
                                 </label>

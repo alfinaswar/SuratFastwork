@@ -41,6 +41,10 @@
                             {!! Form::text('name', null, ['placeholder' => 'Nama', 'class' => 'form-control']) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
+                            <label class="form-label">Inisial</label>
+                            {!! Form::text('inisial', null, ['placeholder' => 'Inisial Nama', 'class' => 'form-control']) !!}
+                        </div>
+                        <div class="col-sm-6 m-b30">
                             <label class="form-label">Email</label>
                             {!! Form::text('email', null, ['placeholder' => 'Email', 'class' => 'form-control']) !!}
                         </div>
@@ -48,14 +52,17 @@
                             <label class="form-label">Nomor Identitas Pegawai</label>
                             {!! Form::text('nip', null, ['placeholder' => 'Nomor Identitas Pegawai', 'class' => 'form-control']) !!}
                         </div>
-
+                        <div class="col-sm-6 m-b30">
+                            <label class="form-label">Perusahaan</label>
+                            {!! Form::text('perusahaan', null, ['placeholder' => 'Nama Perusahaan', 'class' => 'form-control']) !!}
+                        </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Role</label>
                             {!! Form::select('roles[]', $roles, [], ['class' => 'me-sm-2 default-select form-control wide']) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
-                            <label class="form-label">Departemen</label>
-                            {!! Form::text('department', null, ['placeholder' => 'Departmen', 'class' => 'form-control']) !!}
+                            <label class="form-label">Departmen</label>
+                            {!! Form::select('departmen', $departmen, ['class' => 'me-sm-2 default-select form-control wide']) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Jabatan</label>

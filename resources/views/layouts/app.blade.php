@@ -224,6 +224,10 @@
                                         <a href="{{ route('master-field.index') }}" data-key="t-level-1-2">Master
                                             Master Fields</a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('master-departemen.index') }}" data-key="t-level-1-2">Master
+                                            Master Departemen</a>
+                                    </li>
                                 </ul>
                             </li>
                         @endcan

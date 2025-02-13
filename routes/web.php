@@ -4,6 +4,7 @@ use App\Http\Controllers\DrafterController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\MasterDepartemenController;
 use App\Http\Controllers\MasterFieldsController;
 use App\Http\Controllers\MasterJenisController;
 use App\Http\Controllers\MasterPenerimaEksternalController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\SuratTerkirimController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifikatorController;
+use App\Models\MasterDepartemen;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,6 +67,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::prefix('kategori-surat')->group(function () {
         Route::GET('/get-field/{id}', [MasterJenisController::class, 'getField'])->name('kategori-surat.get-field');
     });
+    Route::prefix('users')->group(function () {
+        Route::GET('/get-users/{id}', [UserController::class, 'getUsers'])->name('users.get-users');
+    });
     Route::resource('templates', TemplateController::class);
     Route::resource('drafter', DrafterController::class);
     Route::resource('verifikator', VerifikatorController::class);
@@ -76,6 +81,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('surat-masuk', SuratMasukController::class);
     Route::resource('master-penerima-ext', MasterPenerimaEksternalController::class);
     Route::resource('master-field', MasterFieldsController::class);
+    Route::resource('master-departemen', MasterDepartemenController::class);
+
 
 
     Route::get('/fields', [FieldController::class, 'index'])->name('fields.index');
