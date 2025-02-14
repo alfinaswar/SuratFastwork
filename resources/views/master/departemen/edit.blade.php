@@ -5,7 +5,7 @@
         <div class="card-header">Edit Departemen</div>
 
         <div class="card-body">
-            <form action="{{ route('departemen.update', $departemen->id) }}" method="POST">
+            <form action="{{ route('master-departemen.update', $departemen->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -22,7 +22,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Update</button>
-                <a href="{{ route('departemen.index') }}" class="btn btn-secondary">Kembali</a>
+                <a href="{{ route('master-departemen.index') }}" class="btn btn-secondary">Kembali</a>
             </form>
         </div>
     </div>

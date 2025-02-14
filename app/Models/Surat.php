@@ -15,7 +15,9 @@ class Surat extends Model
 
     protected $casts = [
         'CarbonCopy' => 'json',
-        'BlindCarbonCopy' => 'json'
+        'CarbonCopyEks' => 'json',
+        'BlindCarbonCopy' => 'json',
+        'BlindCarbonCopyEks' => 'json',
     ];
 
     public function getPenerima()
@@ -35,4 +37,6 @@ class Surat extends Model
     {
         return $this->belongsTo(User::class, 'DibuatOleh', 'id');
     }
+
+
 }

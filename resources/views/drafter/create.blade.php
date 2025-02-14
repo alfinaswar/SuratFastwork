@@ -19,35 +19,39 @@
         <div class="row justify-content-center">
             <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <h4 class="card-title">BUAT DRAFT SURAT</h4>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-12">
-                                    <div class="form-group mb-3">
-                                        <label for="tanggal_surat">Kategori Surat</label>
-                                        <select class="form-control" data-trigger name="idJenis"
-                                            id="choices-multiple-default KategoriSurat" placeholder="This is a placeholder"
-                                            onchange="changeKategori(this)">
-                                            @foreach ($kategori as $i)
-                                                <option value="{{ $i->id }}">{{ $i->JenisSurat }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('idJenis')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
+                    <form action="{{ route('drafter.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="card-header">
+
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h4 class="card-title">BUAT DRAFT SURAT</h4>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="col-12">
+                                        <div class="form-group mb-3">
+                                            <label for="tanggal_surat">Kategori Surat</label>
+                                            <select class="form-control" data-trigger name="idJenis"
+                                                id="choices-multiple-default KategoriSurat"
+                                                placeholder="This is a placeholder" onchange="changeKategori(this)">
+                                                <option value="">Pilih Kategori Surat</option>
+                                                @foreach ($kategori as $i)
+                                                    <option value="{{ $i->id }}">{{ $i->JenisSurat }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('idJenis')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div><!-- end card header -->
+                        </div><!-- end card header -->
 
-                    <div class="card-body">
-                        <div class="accordion" id="accordionExample">
-                            <form action="{{ route('drafter.store') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
+                        <div class="card-body">
+                            <div class="accordion" id="accordionExample">
+
                                 <div class="row">
                                     <div class="form-group mb-3">
                                         <label for="perihal">Perihal</label>
@@ -61,8 +65,7 @@
                                     <div class="col-6">
                                         <div class="form-group mb-3">
                                             <label for="tanggal_surat">Tanggal Surat</label>
-                                            <input type="date" class="form-control" id="TanggalSurat"
-                                                name="TanggalSurat">
+                                            <input type="date" class="form-control" id="TanggalSurat" name="TanggalSurat">
                                             @error('TanggalSurat')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -99,7 +102,7 @@
                                                             id="choices-multiple-default PenerimaSurat"
                                                             onchange="selectPenerimaInt(this)"
                                                             placeholder="This is a placeholder">
-                                                            <option value="">Pilih Penerima</option>
+                                                            <option>Pilih Penerima</option>
                                                             @foreach ($penerima as $p)
                                                                 <option value="{{ $p->id }}">{{ $p->name }} -
                                                                     {{ $p->jabatan }}
@@ -183,9 +186,8 @@
                                                     </div>
                                                     <div class="form-group mb-3">
                                                         <label for="kepada">Inisial Penerima</label>
-                                                        <input type="text" name="InisialPenerima"
-                                                            id="InisialPenerimaExt" class="form-control"
-                                                            placeholder="Autofill" readonly>
+                                                        <input type="text" name="InisialPenerima" id="InisialPenerimaExt"
+                                                            class="form-control" placeholder="Autofill" readonly>
 
                                                     </div>
                                                     <div class="form-group mb-3">
@@ -255,8 +257,7 @@
                                 <div class="accordion-item" id="CCExternal">
                                     <h2 class="accordion-header" id="headingSix">
                                         <button class="accordion-button fw-medium" type="button"
-                                            data-bs-target="#collapseSix" aria-expanded="true"
-                                            aria-controls="collapseSix">
+                                            data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
                                             Carbon Copy Eksternal
                                         </button>
                                     </h2>
@@ -323,8 +324,7 @@
                                                 <div class="form-group mb-3">
                                                     <label for="bcc">Blind CC Eksternal</label>
                                                     <select class="form-control" data-trigger name="BlindCarbonCopyExt[]"
-                                                        id="choices-multiple-bcc" placeholder="Pilih penerima BC"
-                                                        multiple>
+                                                        id="choices-multiple-bcc" placeholder="Pilih penerima BC" multiple>
                                                         <option>Pilih penerima</option>
                                                         @foreach ($penerima as $p)
                                                             <option value="{{ $p->id }}">{{ $p->name }} -
@@ -353,8 +353,8 @@
                                             <div class="accordion-body">
                                                 <div class="form-group mb-3">
                                                     <label for="isi_surat">Isi Surat</label>
-                                                    <textarea class="form-control" id="ckeditor-classic" name="Isi" rows="10"
-                                                        placeholder="Masukkan isi surat"></textarea>
+                                                    <textarea class="form-control" id="ckeditor-classic" name="Isi"
+                                                        rows="10" placeholder="Masukkan isi surat"></textarea>
                                                     @error('Isi')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -369,148 +369,148 @@
                                         <a href="{{ route('drafter.index') }}" class="btn btn-secondary">Kembali</a>
                                     </div>
                                 </div><!-- end accordion -->
-                            </form>
-                        </div><!-- end card-body -->
-                    </div><!-- end card -->
-                </div><!-- end col -->
+                    </form>
+                </div><!-- end card-body -->
+            </div><!-- end card -->
+        </div><!-- end col -->
 
-            </div>
-        </div>
-    @endsection
-    @push('js')
-        <script>
-            $(document).ready(function() {
-                $("#PenerimaInternal").hide();
-                $("#PenerimaEksternal").hide();
-                $("#CCInternal").hide();
-                $("#CCExternal").hide();
-                $("#BCCInternal").hide();
-                $("#BCCExternal").hide();
-            });
+    </div>
+    </div>
+@endsection
+@push('js')
+    <script>
+        $(document).ready(function () {
+            $("#PenerimaInternal").hide();
+            $("#PenerimaEksternal").hide();
+            $("#CCInternal").hide();
+            $("#CCExternal").hide();
+            $("#BCCInternal").hide();
+            $("#BCCExternal").hide();
+        });
 
-            function changeKategori(data) {
-                var id = data.value;
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('kategori-surat.get-field', '') }}/" + id,
-                    data: {},
-                    dataType: "json",
-                    success: function(response) {
-                        // alert(response.PenerimaInternal);
-                        if (response.PenerimaInternal == "YA") {
-                            $("#PenerimaInternal").show();
-                        } else {
-                            $("#PenerimaInternal").hide();
-                        }
-                        if (response.PenerimaEksternal == "YA") {
-                            $("#PenerimaEksternal").show();
-                        } else {
-                            $("#PenerimaEksternal").hide();
-                        }
-                        if (response.CCInternal == "YA") {
-                            $("#CCInternal").show();
-                        } else {
-                            $("#CCInternal").hide();
-                        }
-                        if (response.CCEksternal == "YA") {
-                            $("#CCExternal").show();
-                        } else {
-                            $("#CCExternal").hide();
-                        }
-                        if (response.BCCInternal == "YA") {
-                            $("#BCCInternal").show();
-                        } else {
-                            $("#BCCInternal").hide();
-                        }
-                        if (response.BCEksternal == "YA") {
-                            $("#BCCExternal").show();
-                        } else {
-                            $("#BCCExternal").hide();
-                        }
-                        $("#IsiSuratCC").show();
-                    }
-                });
-            }
-
-            function selectPenerimaInt(data) {
-
-                var idPenerima = data.value;
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('users.get-users', '') }}/" + idPenerima,
-                    data: {},
-                    dataType: "json",
-                    success: function(response) {
-                        $("#InisialPenerima").val(response.name);
-                        $("#JabatanInt").val(response.jabatan);
-                        $("#DepartemenInt").val(response.department);
-                        $("#PerusahaanInt").val(response.perusahaan);
-                        $("#AlamatInt").val(response.alamat);
-                        $("#EmailInt").val(response.email);
-
-                    }
-                });
-            }
-
-            function selectPenerimaExt(data) {
-
-                var idPenerima = data.value;
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('users.get-users', '') }}/" + idPenerima,
-                    data: {},
-                    dataType: "json",
-                    success: function(response) {
-                        $("#InisialPenerimaExt").val(response.name);
-                        $("#JabatanExt").val(response.jabatan);
-                        $("#DepartemenExt").val(response.department);
-                        $("#PerusahaanExt").val(response.perusahaan);
-                        $("#AlamatExt").val(response.alamat);
-                        $("#EmailExt").val(response.email);
-
-                    }
-                });
-            }
-        </script>
-        <script>
-            function previewFiles(input) {
-                const previewContainer = document.getElementById('preview-container');
-                previewContainer.innerHTML = ''; // Clear previous previews
-
-                Array.from(input.files).forEach(file => {
-                    const reader = new FileReader();
-                    const previewElement = document.createElement('div');
-                    previewElement.className = 'preview-item position-relative';
-
-                    reader.onload = function(e) {
-                        if (file.type.startsWith('image/')) {
-                            previewElement.innerHTML = `
-                    <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
-                    <div class="mt-1">${file.name}</div>
-                `;
-                        } else {
-                            let fileIcon = '📄';
-                            if (file.type.includes('pdf')) fileIcon = '📕';
-                            else if (file.type.includes('word')) fileIcon = '📘';
-                            else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
-
-                            previewElement.innerHTML = `
-                    <div class="text-center">
-                        <div style="font-size: 2rem;">${fileIcon}</div>
-                        <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
-                    </div>
-                `;
-                        }
-                    };
-
-                    if (file.type.startsWith('image/')) {
-                        reader.readAsDataURL(file);
+        function changeKategori(data) {
+            var id = data.value;
+            $.ajax({
+                type: "GET",
+                url: "{{ route('kategori-surat.get-field', '') }}/" + id,
+                data: {},
+                dataType: "json",
+                success: function (response) {
+                    // alert(response.PenerimaInternal);
+                    if (response.PenerimaInternal == "YA") {
+                        $("#PenerimaInternal").show();
                     } else {
-                        reader.readAsText(file);
+                        $("#PenerimaInternal").hide();
                     }
+                    if (response.PenerimaEksternal == "YA") {
+                        $("#PenerimaEksternal").show();
+                    } else {
+                        $("#PenerimaEksternal").hide();
+                    }
+                    if (response.CCInternal == "YA") {
+                        $("#CCInternal").show();
+                    } else {
+                        $("#CCInternal").hide();
+                    }
+                    if (response.CCEksternal == "YA") {
+                        $("#CCExternal").show();
+                    } else {
+                        $("#CCExternal").hide();
+                    }
+                    if (response.BCCInternal == "YA") {
+                        $("#BCCInternal").show();
+                    } else {
+                        $("#BCCInternal").hide();
+                    }
+                    if (response.BCEksternal == "YA") {
+                        $("#BCCExternal").show();
+                    } else {
+                        $("#BCCExternal").hide();
+                    }
+                    $("#IsiSuratCC").show();
+                }
+            });
+        }
 
-                    previewContainer.appendChild(previewElement);
-                });
-            }
-        </script>
-    @endpush
+        function selectPenerimaInt(data) {
+
+            var idPenerima = data.value;
+            $.ajax({
+                type: "GET",
+                url: "{{ route('users.get-users', '') }}/" + idPenerima,
+                data: {},
+                dataType: "json",
+                success: function (response) {
+                    $("#InisialPenerima").val(response.inisial);
+                    $("#JabatanInt").val(response.jabatan);
+                    $("#DepartemenInt").val(response.get_departmen.NamaDepartemen);
+                    $("#PerusahaanInt").val(response.perusahaan);
+                    $("#AlamatInt").val(response.alamat);
+                    $("#EmailInt").val(response.email);
+
+                }
+            });
+        }
+
+        function selectPenerimaExt(data) {
+
+            var idPenerima = data.value;
+            $.ajax({
+                type: "GET",
+                url: "{{ route('users.get-users', '') }}/" + idPenerima,
+                data: {},
+                dataType: "json",
+                success: function (response) {
+                    $("#InisialPenerimaExt").val(response.inisial);
+                    $("#JabatanExt").val(response.jabatan);
+                    $("#DepartemenExt").val(response.get_departmen.NamaDepartemen);
+                    $("#PerusahaanExt").val(response.perusahaan);
+                    $("#AlamatExt").val(response.alamat);
+                    $("#EmailExt").val(response.email);
+
+                }
+            });
+        }
+    </script>
+    <script>
+        function previewFiles(input) {
+            const previewContainer = document.getElementById('preview-container');
+            previewContainer.innerHTML = ''; // Clear previous previews
+
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                const previewElement = document.createElement('div');
+                previewElement.className = 'preview-item position-relative';
+
+                reader.onload = function (e) {
+                    if (file.type.startsWith('image/')) {
+                        previewElement.innerHTML = `
+                                <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                <div class="mt-1">${file.name}</div>
+                            `;
+                    } else {
+                        let fileIcon = '📄';
+                        if (file.type.includes('pdf')) fileIcon = '📕';
+                        else if (file.type.includes('word')) fileIcon = '📘';
+                        else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
+
+                        previewElement.innerHTML = `
+                                <div class="text-center">
+                                    <div style="font-size: 2rem;">${fileIcon}</div>
+                                    <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
+                                </div>
+                            `;
+                    }
+                };
+
+                if (file.type.startsWith('image/')) {
+                    reader.readAsDataURL(file);
+                } else {
+                    reader.readAsText(file);
+                }
+
+                previewContainer.appendChild(previewElement);
+            });
+        }
+    </script>
+@endpush

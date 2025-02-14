@@ -12,10 +12,10 @@
     <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">
         <thead>
             <tr>
-                <th>#</th>
+                <th width="5%">#</th>
                 <th>Kode</th>
                 <th>Nama Departemen</th>
-                <th>Aksi</th>
+                <th width="15%" class="justify-content-center">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -24,14 +24,11 @@
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $departemen->Kode }}</td>
                     <td>{{ $departemen->NamaDepartemen }}</td>
-                    <td>
-                        <a href="{{ route('departemen.edit', $departemen->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('departemen.destroy', $departemen->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Hapus departemen ini?')">Hapus</button>
-                        </form>
+                    <td class="text-center">
+                        <a href="{{ route('master-departemen.edit', $departemen->id) }}"
+                            class="btn btn-warning btn-sm">Edit</a>
+                        <button type="button" class="btn btn-danger btn-sm btn-delete"
+                            data-id="{{ $departemen->id }}">Hapus</button>
                     </td>
                 </tr>
             @endforeach
@@ -41,11 +38,57 @@
         <script>
             setTimeout(function() {
                 swal.fire({
-                    title: "{{ __('Success!') }}",
+                    title: "{{ __('Sukses!') }}",
                     text: "{!! \Session::get('success') !!}",
-                    icon: "success"
+                    icon: "sukses"
                 });
             }, 1000);
         </script>
     @endif
 @endsection
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('body').on('click', '.btn-delete', function() {
+                var id = $(this).data('id');
+
+                Swal.fire({
+                    title: 'Hapus Data',
+                    text: "Anda Ingin Menghapus Data?",
+                    icon: 'peringatan',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Hapus'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '{{ route('master-departemen.destroy', ':id') }}'.replace(
+                                ':id',
+                                id),
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Dihapus',
+                                    'Data Berhasil Dihapus',
+                                    'sukses'
+                                );
+
+                                $('#datatable').DataTable().ajax.reload();
+                            },
+                            error: function(xhr) {
+                                Swal.fire(
+                                    'Gagal!',
+                                    xhr.responseJSON.message || 'Gagal',
+                                    'error'
+                                );
+                                console.log(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>

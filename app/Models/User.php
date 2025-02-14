@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $table = 'users';
-protected $guarded = ['id'];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -39,4 +39,9 @@ protected $guarded = ['id'];
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getDepartmen()
+    {
+        return $this->belongsTo(Departemen::class, 'department', 'id');
+    }
 }

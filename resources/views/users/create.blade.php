@@ -41,6 +41,10 @@
                             {!! Form::text('name', null, ['placeholder' => 'Nama', 'class' => 'form-control']) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
+                            <label class="form-label">Inisial Nama</label>
+                            {!! Form::text('inisial', null, ['placeholder' => 'Inisial Nama', 'class' => 'form-control']) !!}
+                        </div>
+                        <div class="col-sm-6 m-b30">
                             <label class="form-label">Inisial</label>
                             {!! Form::text('inisial', null, ['placeholder' => 'Inisial Nama', 'class' => 'form-control']) !!}
                         </div>
@@ -62,7 +66,9 @@
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Departmen</label>
-                            {!! Form::select('departmen', $departmen, ['class' => 'me-sm-2 default-select form-control wide']) !!}
+                            {!! Form::select('department', $departmen->pluck('NamaDepartemen', 'id'), null, [
+                                'class' => 'me-sm-2 default-select form-control wide',
+                            ]) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Jabatan</label>

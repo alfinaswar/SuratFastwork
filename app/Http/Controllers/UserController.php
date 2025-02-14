@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departemen;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -35,7 +36,8 @@ class UserController extends Controller
     public function create(): View
     {
         $roles = Role::pluck('name', 'name')->all();
-        return view('users.create', compact('roles'));
+        $departmen = Departemen::get();
+        return view('users.create', compact('roles', 'departmen'));
     }
 
     /**
@@ -93,9 +95,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $roles = Role::pluck('name', 'name')->all();
+        $departmen = Departemen::get();
         $userRole = $user->roles->pluck('name', 'name')->all();
 
-        return view('users.edit', compact('user', 'roles', 'userRole'));
+        return view('users.edit', compact('user', 'roles', 'userRole', 'departmen'));
     }
 
     /**
@@ -149,7 +152,7 @@ class UserController extends Controller
     }
     public function getUsers($id)
     {
-        $user = User::find($id);
+        $user = User::with('getDepartmen')->find($id);
         if (!$user) {
             return response()->json(['message' => 'User Tidak Ditemukan'], 404);
         }

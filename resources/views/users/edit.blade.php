@@ -45,8 +45,12 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-6 m-b30">
-                            <label class="form-label">Name</label>
+                            <label class="form-label">Nama</label>
                             {!! Form::text('name', null, ['placeholder' => 'Nama', 'class' => 'form-control']) !!}
+                        </div>
+                        <div class="col-sm-6 m-b30">
+                            <label class="form-label">Inisial Nama</label>
+                            {!! Form::text('inisial', null, ['placeholder' => 'Inisial Nama', 'class' => 'form-control']) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Email</label>
@@ -56,7 +60,10 @@
                             <label class="form-label">Nomor Identitas Pegawai</label>
                             {!! Form::text('nip', null, ['placeholder' => 'Nomor Identitas Pegawai', 'class' => 'form-control']) !!}
                         </div>
-
+                        <div class="col-sm-6 m-b30">
+                            <label class="form-label">Perusahaan</label>
+                            {!! Form::text('perusahaan', null, ['placeholder' => 'Nama Perusahaan', 'class' => 'form-control']) !!}
+                        </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Role</label>
                             {!! Form::select('roles[]', $roles, isset($userRole) ? $userRole : [], [
@@ -64,8 +71,16 @@
                             ]) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
-                            <label class="form-label">Departemen</label>
-                            {!! Form::text('department', null, ['placeholder' => 'Departmen', 'class' => 'form-control']) !!}
+                            <label class="form-label">Departmen</label>
+                            {!! Form::select(
+                                'department',
+                                $departmen->pluck('NamaDepartemen', 'id'),
+                                isset($user) ? $user->department : 'null',
+                                [
+                                    'class' => 'me-sm-2 default-select form-control wide',
+                                    'placeholder' => 'Pilih Departmen',
+                                ],
+                            ) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Jabatan</label>

@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\MasterJenis;
 use App\Models\Surat;
 use App\Models\User;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Mpdf\Mpdf;
 use PhpOffice\PhpWord\Shared\Html;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\TemplateProcessor;
+use PhpParser\JsonDecoder;
 use Yajra\DataTables\Facades\DataTables;
 
 class DrafterController extends Controller
@@ -54,25 +57,8 @@ class DrafterController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
-        $validator = Validator::make($request->all(), [
-            'idJenis' => 'required',
-            'TanggalSurat' => 'required',
-            'Lampiran' => 'nullable|array',
-            'PenerimaSurat' => 'required',
-            'CarbonCopy' => 'nullable',
-            'BlindCarbonCopy' => 'nullable',
-            'Perihal' => 'required',
-            'Isi' => 'required',
-        ]);
 
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
+        $namaccext = [];
         $data = $request->all();
         $isiSurat = htmlspecialchars_decode($request->Isi);
         $cekKategori = MasterJenis::find($request->idJenis);
@@ -89,17 +75,24 @@ class DrafterController extends Controller
         // Simpan data ke database
         $surat = Surat::create([
             'idJenis' => $data['idJenis'],
+            'NomorProject' => $this->GenerateKode(),
             'NomorSurat' => $this->GenerateKode(),
             'TanggalSurat' => $data['TanggalSurat'],
             'Lampiran' => json_encode($lampiran),
             'PenerimaSurat' => $data['PenerimaSurat'],
+            'PenerimaSuratEks' => $data['PenerimaSuratEksternal'] ?? null,
             'CarbonCopy' => $data['CarbonCopy'] ?? null,
-            'BlindCarbonCopy' => $data['BlindCarbonCopy'] ?? null,
+            'CarbonCopyEks' => $data['CarbonCopyExt'] ?? null,
+            'BlindCarbonCopy' => $data['BlindCarbonCopyInt'] ?? null,
+            'BlindCarbonCopyEks' => $data['BlindCarbonCopyExt'] ?? null,
             'Perihal' => $data['Perihal'],
             'Isi' => $data['Isi'],
             'DibuatOleh' => auth()->user()->id,
             'NamaFile' => $cekKategori->JenisSurat . '-' . $IdSurat,
         ]);
+
+
+
 
         // Path template & output
         $templatePath = storage_path('app/public/FormatSurat/' . $cekKategori->FormatSurat);
@@ -109,23 +102,76 @@ class DrafterController extends Controller
         if (!file_exists($templatePath)) {
             return redirect()->route('drafter.index')->withErrors(['message' => 'Template tidak ditemukan']);
         }
-
         // Buat dokumen Word dari template
         $templateProcessor = new TemplateProcessor($templatePath);
         $isiSurat = strip_tags($request->Isi);
-        $NamaPenerima = User::where('id', $request->PenerimaSurat)->first();
 
+        $NamaPenerima = User::with('getDepartmen')->where('id', $request->PenerimaSurat)->first();
+
+        $datasurat = Surat::latest()->first();
+        $NamaCCInternal = User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopy)->get();
+
+        $NamaCCExternal = User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopyEks)->get();
+        $NamaBCCInternal = User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopy)->get();
+        $NamaBCCExternal = User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopyEks)->get();
+        function formatUserList($users)
+        {
+            $output = [];
+            foreach ($users as $index => $user) {
+                $output[] = ($index + 1) . ". " . $user->name . " - " . $user->getDepartmen->jabatan . " - " . $user->getDepartmen->perusahaan;
+            }
+            return implode("\n", $output);
+        }
+
+        $formattedCCInternal = formatUserList($NamaCCInternal);
+        $formattedCCExternal = formatUserList($NamaCCExternal);
+        $formattedBCCInternal = formatUserList($NamaBCCInternal);
+        $formattedBCCExternal = formatUserList($NamaBCCExternal);
+
+        $writer = new PngWriter();
+        $link = route('surat-terkirim.download', $surat->id);
+        $qrCode = QrCode::create($link)
+            ->setSize(100)
+            ->setMargin(0);
+
+        $barcode = $writer->write($qrCode)->getDataUri();
+
+        $templateProcessor->setImageValue('Qrcode', $barcode);
         $dataWord = [
-            'NomorDokumen' => $this->GenerateKode(),
-            'TanggalSurat' => $data['TanggalSurat'],
-            'Nama' => $NamaPenerima->name,
+            'nomor' => $this->GenerateKode(),
+            'kodeproyek' => $this->GenerateKode(),
+            'tanggalterbit' => $data['TanggalSurat'],
+            'penerima_int' => $NamaPenerima->name,
+            'penerima_eks' => $NamaPenerima->name,
+            'inisialpenerima' => $NamaPenerima->inisial,
+            'jabatanpenerima' => $NamaPenerima->jabatan,
+            'departpenerima' => $NamaPenerima->getDepartmen->NamaDepartemen,
+            'perusahaanpenerima' => $data['PerusahaanInt'],
+            'alamat' => $data['AlamatInt'],
             'Jabatan' => $NamaPenerima->jabatan,
-            'LokasiKerja' => 'Indonesia',
-            'Email' => $NamaPenerima->email,
-            'Perihal' => $request->Perihal,
-            'Acuan' => $request->Acuan ?? 'Tidak ada',
-            'Isi' => $isiSurat,
-            'Divisi' => $NamaPenerima->department,
+            'email' => $NamaPenerima->email,
+            'website' => null,
+            'perihal' => $request->Perihal,
+            'pengirim' => null,
+            'inisialpengirim' => null,
+            'jabatpengirim' => null,
+            'departpengirim' => null,
+            'perusahaanpengirim' => null,
+            'ccint' => $formattedCCInternal,
+            'ccxt' => $formattedCCExternal,
+            'bccint' => $formattedBCCInternal,
+            'bccext' => $formattedBCCExternal,
+            'kodeinisialbcc' => null,
+            'jabatancclist' => null,
+            'departemencc' => null,
+            'perusahaancc' => null,
+            'jabatanbcc' => null,
+            'departemenbcc' => null,
+            'perusahaanbcc' => null,
+            'kodedrafter' => null,
+            'kodeverificator' => null,
+            'kodeapprover' => null,
+            'isi' => $isiSurat,
             'Qrcode' => $request->Qrcode ?? 'Tidak ada',
             'Pengirim' => auth()->user()->name,
             'JabatanPengirim' => auth()->user()->jabatan,
@@ -269,4 +315,5 @@ class DrafterController extends Controller
 
         return $kodeSurat;
     }
+
 }
