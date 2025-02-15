@@ -19,7 +19,7 @@
 
                         <div class="row align-items-center">
                             <div class="col-sm-3 text-center">
-                                <img src="{{ asset('assets/images/icon/word.png') }}">
+                                <img src="{{ asset('assets/images/icon/word.png') }}" width="auto">
                             </div>
                             <div class="col-sm align-self-center">
                                 <div class="mt-4 mt-sm-0">
@@ -64,15 +64,23 @@
                                         <div>
                                             <label class="mb-2 text-muted text-uppercase font-size-11">Lampiran</label>
                                             <div class="fw-medium">
-                                                @foreach ($surat->FileLampiran as $lampiran)
-                                                    <div class="alert alert-success alert-dismissible alert-label-icon label-arrow fade show"
+                                                @if(count($surat->FileLampiran) < 1)
+                                                    <div class="alert alert-info alert-dismissible alert-label-icon label-arrow fade show"
                                                         role="alert">
-                                                        <i class="mdi mdi-file-document label-icon"></i><strong><a
-                                                                href="{{ asset('storage/lampiran/' . $lampiran) }}">
-                                                                {{ $lampiran }}</strong></a>
-
+                                                        <i class="mdi mdi-information label-icon"></i><strong>Tidak ada
+                                                            lampiran.</strong>
                                                     </div>
-                                                @endforeach
+                                                @else
+                                                    @foreach ($surat->FileLampiran as $lampiran)
+                                                        <div class="alert alert-success alert-dismissible alert-label-icon label-arrow fade show"
+                                                            role="alert">
+                                                            <i class="mdi mdi-file-document label-icon"></i><strong><a
+                                                                    href="{{ asset('storage/lampiran/' . $lampiran) }}">
+                                                                    {{ $lampiran }}</strong></a>
+
+                                                        </div>
+                                                    @endforeach
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -141,12 +149,12 @@
                 const previewElement = document.createElement('div');
                 previewElement.className = 'preview-item position-relative';
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     if (file.type.startsWith('image/')) {
                         previewElement.innerHTML = `
-                    <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
-                    <div class="mt-1">${file.name}</div>
-                `;
+                                                                                                        <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                                                                                        <div class="mt-1">${file.name}</div>
+                                                                                                    `;
                     } else {
                         let fileIcon = '📄';
                         if (file.type.includes('pdf')) fileIcon = '📕';
@@ -154,11 +162,11 @@
                         else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
 
                         previewElement.innerHTML = `
-                    <div class="text-center">
-                        <div style="font-size: 2rem;">${fileIcon}</div>
-                        <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
-                    </div>
-                `;
+                                                                                                        <div class="text-center">
+                                                                                                            <div style="font-size: 2rem;">${fileIcon}</div>
+                                                                                                            <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
+                                                                                                        </div>
+                                                                                                    `;
                     }
                 };
 

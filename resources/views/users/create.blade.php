@@ -67,8 +67,8 @@
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Departmen</label>
                             {!! Form::select('department', $departmen->pluck('NamaDepartemen', 'id'), null, [
-                                'class' => 'me-sm-2 default-select form-control wide',
-                            ]) !!}
+        'class' => 'me-sm-2 default-select form-control wide',
+    ]) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Jabatan</label>
@@ -82,7 +82,10 @@
                             <label class="form-label">Alamat</label>
                             {!! Form::textarea('alamat', null, ['placeholder' => 'Alamat', 'class' => 'form-control', 'rows' => 3]) !!}
                         </div>
-
+                        <div class="col-sm-6 m-b30">
+                            <label class="form-label">Website</label>
+                            {!! Form::text('website', null, ['placeholder' => 'Link Website', 'class' => 'form-control']) !!}
+                        </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Password</label>
                             {!! Form::password('password', ['placeholder' => 'Password', 'class' => 'form-control']) !!}
@@ -93,8 +96,7 @@
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Foto</label>
-                            <input type="file" name="Foto" class="form-control" id="profileImageInput"
-                                accept="image/*">
+                            <input type="file" name="Foto" class="form-control" id="profileImageInput" accept="image/*">
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Tanda Tangan</label>
@@ -111,11 +113,11 @@
 
     </div>
     <script>
-        document.getElementById('profileImageInput').addEventListener('change', function(event) {
+        document.getElementById('profileImageInput').addEventListener('change', function (event) {
             const input = event.target;
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     document.getElementById('profileImage').src = e.target.result;
                 }
                 reader.readAsDataURL(input.files[0]);

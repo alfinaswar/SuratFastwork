@@ -37,6 +37,10 @@ class Surat extends Model
     {
         return $this->belongsTo(User::class, 'DibuatOleh', 'id');
     }
+    public function getVerifikator()
+    {
+        return $this->belongsTo(User::class, 'VerifiedBy', 'id');
+    }
 
 
 }

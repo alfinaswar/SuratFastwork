@@ -67,20 +67,20 @@
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Role</label>
                             {!! Form::select('roles[]', $roles, isset($userRole) ? $userRole : [], [
-                                'class' => 'me-sm-2 default-select form-control wide',
-                            ]) !!}
+        'class' => 'me-sm-2 default-select form-control wide',
+    ]) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Departmen</label>
                             {!! Form::select(
-                                'department',
-                                $departmen->pluck('NamaDepartemen', 'id'),
-                                isset($user) ? $user->department : 'null',
-                                [
-                                    'class' => 'me-sm-2 default-select form-control wide',
-                                    'placeholder' => 'Pilih Departmen',
-                                ],
-                            ) !!}
+        'department',
+        $departmen->pluck('NamaDepartemen', 'id'),
+        isset($user) ? $user->department : 'null',
+        [
+            'class' => 'me-sm-2 default-select form-control wide',
+            'placeholder' => 'Pilih Departmen',
+        ],
+    ) !!}
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Jabatan</label>
@@ -94,7 +94,10 @@
                             <label class="form-label">Alamat</label>
                             {!! Form::textarea('alamat', null, ['placeholder' => 'Alamat', 'class' => 'form-control', 'rows' => 3]) !!}
                         </div>
-
+                        <div class="col-sm-6 m-b30">
+                            <label class="form-label">Website</label>
+                            {!! Form::text('name', null, ['placeholder' => 'Nama', 'class' => 'form-control']) !!}
+                        </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Password</label>
                             {!! Form::password('password', ['placeholder' => 'Password', 'class' => 'form-control']) !!}
@@ -111,8 +114,7 @@
                         </div>
                         <div class="col-sm-6 m-b30">
                             <label class="form-label">Foto</label>
-                            <input type="file" name="Foto" class="form-control" id="profileImageInput"
-                                accept="image/*">
+                            <input type="file" name="Foto" class="form-control" id="profileImageInput" accept="image/*">
                             @if (isset($user) && $user->Foto)
                                 <div class="mt-2">
                                     <img src="{{ asset('storage/Foto/' . $user->Foto) }}" alt="Current Profile Photo"
@@ -142,11 +144,11 @@
     </div>
 
     <script>
-        document.getElementById('profileImageInput').addEventListener('change', function(event) {
+        document.getElementById('profileImageInput').addEventListener('change', function (event) {
             const input = event.target;
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     document.getElementById('profileImage').src = e.target.result;
                 }
                 reader.readAsDataURL(input.files[0]);

@@ -108,7 +108,7 @@ class DrafterController extends Controller
 
         $NamaPenerima = User::with('getDepartmen')->where('id', $request->PenerimaSurat)->first();
 
-        $datasurat = Surat::latest()->first();
+        $datasurat = Surat::with('NamaPengirim')->latest()->first();
         $NamaCCInternal = User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopy)->get();
 
         $NamaCCExternal = User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopyEks)->get();
@@ -118,7 +118,7 @@ class DrafterController extends Controller
         {
             $output = [];
             foreach ($users as $index => $user) {
-                $output[] = ($index + 1) . ". " . $user->name . " - " . $user->getDepartmen->jabatan . " - " . $user->getDepartmen->perusahaan;
+                $output[] = ($index + 1) . ". " . $user->name . " - " . $user->getDepartmen->NamaDepartemen . " - " . $user->perusahaan;
             }
             return implode("\n", $output);
         }
@@ -150,13 +150,13 @@ class DrafterController extends Controller
             'alamat' => $data['AlamatInt'],
             'Jabatan' => $NamaPenerima->jabatan,
             'email' => $NamaPenerima->email,
-            'website' => null,
+            'website' => $NamaPenerima->website,
             'perihal' => $request->Perihal,
-            'pengirim' => null,
-            'inisialpengirim' => null,
-            'jabatpengirim' => null,
-            'departpengirim' => null,
-            'perusahaanpengirim' => null,
+            'pengirim' => $datasurat->NamaPengirim->name ?? null,
+            'inisialpengirim' => $datasurat->NamaPengirim->inisial ?? null,
+            'jabatpengirim' => $datasurat->NamaPengirim->jabatan ?? null,
+            'departpengirim' => $datasurat->NamaPengirim->department ?? null,
+            'perusahaanpengirim' => $datasurat->NamaPengirim->perusahaan ?? null,
             'ccint' => $formattedCCInternal,
             'ccxt' => $formattedCCExternal,
             'bccint' => $formattedBCCInternal,
@@ -219,7 +219,7 @@ class DrafterController extends Controller
      */
     public function edit($id)
     {
-        $surat = Surat::with('getCatatan')->findOrFail($id);
+        $surat = Surat::with('getCatatan', 'getVerifikator')->findOrFail($id);
         $kategori = MasterJenis::all();
         $penerima = User::all();
 
@@ -250,13 +250,20 @@ class DrafterController extends Controller
         }
 
         $surat = Surat::findOrFail($id);
+        $lampiran = [];
 
+        if ($request->hasFile('Lampiran')) {
+            foreach ($request->file('Lampiran') as $file) {
+                $path = $file->store('public/lampiran');
+                $lampiran[] = basename($path);
+            }
+        }
         $data = $request->all();
 
         $surat->update([
             'idJenis' => json_encode($data['idJenis']),
             'TanggalSurat' => $data['TanggalSurat'],
-            'Lampiran' => $data['Lampiran'],
+            'Lampiran' => json_encode($lampiran),
             'PenerimaSurat' => $data['PenerimaSurat'],
             'CarbonCopy' => $data['CarbonCopy'] ?? null,
             'BlindCarbonCopy' => $data['BlindCarbonCopy'] ?? null,
