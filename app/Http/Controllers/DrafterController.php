@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\MasterJenis;
 use App\Models\Surat;
 use App\Models\User;
-use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Mpdf\Mpdf;
@@ -57,7 +57,6 @@ class DrafterController extends Controller
 
     public function store(Request $request)
     {
-
         $namaccext = [];
         $data = $request->all();
         $isiSurat = htmlspecialchars_decode($request->Isi);
@@ -91,9 +90,6 @@ class DrafterController extends Controller
             'NamaFile' => $cekKategori->JenisSurat . '-' . $IdSurat,
         ]);
 
-
-
-
         // Path template & output
         $templatePath = storage_path('app/public/FormatSurat/' . $cekKategori->FormatSurat);
         $docxPath = storage_path('app/public/surat/' . $cekKategori->JenisSurat . '-' . $IdSurat . '.docx');
@@ -114,11 +110,12 @@ class DrafterController extends Controller
         $NamaCCExternal = User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopyEks)->get();
         $NamaBCCInternal = User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopy)->get();
         $NamaBCCExternal = User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopyEks)->get();
+
         function formatUserList($users)
         {
             $output = [];
             foreach ($users as $index => $user) {
-                $output[] = ($index + 1) . ". " . $user->name . " - " . $user->getDepartmen->NamaDepartemen . " - " . $user->perusahaan;
+                $output[] = ($index + 1) . '. ' . $user->name . ' - ' . $user->getDepartmen->NamaDepartemen . ' - ' . $user->perusahaan;
             }
             return implode("\n", $output);
         }
@@ -129,7 +126,7 @@ class DrafterController extends Controller
         $formattedBCCExternal = formatUserList($NamaBCCExternal);
 
         $writer = new PngWriter();
-        $link = route('surat-terkirim.download', $surat->id);
+        $link = route('surat.digital', $surat->id);
         $qrCode = QrCode::create($link)
             ->setSize(100)
             ->setMargin(0);
@@ -322,5 +319,4 @@ class DrafterController extends Controller
 
         return $kodeSurat;
     }
-
 }

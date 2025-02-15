@@ -18,6 +18,7 @@ use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifikatorController;
 use App\Models\MasterDepartemen;
+use App\Models\SuratMasuk;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/surat-digital/{id}', [HomeController::class, 'showDigital'])->name('surat.digital');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::prefix('log')->group(function () {
@@ -49,6 +51,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::GET('/approve/{id}', [PersetujuanController::class, 'approve'])->name('persetujuan.approve');
         Route::GET('/reject/{id}', [PersetujuanController::class, 'reject'])->name('persetujuan.reject');
     });
+
     Route::prefix('verifikator')->group(function () {
         Route::GET('/download-preview/{id}', [VerifikatorController::class, 'show'])->name('verifikator.preview');
         Route::GET('/download-preview/{id}', [VerifikatorController::class, 'downloadPreview'])->name('verifikator.download-preview');
@@ -82,8 +85,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('master-penerima-ext', MasterPenerimaEksternalController::class);
     Route::resource('master-field', MasterFieldsController::class);
     Route::resource('master-departemen', MasterDepartemenController::class);
-
-
 
     Route::get('/fields', [FieldController::class, 'index'])->name('fields.index');
     Route::get('/generate-word', [MasterJenisController::class, 'generateWord']);
