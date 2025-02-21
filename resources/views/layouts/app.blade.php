@@ -15,8 +15,8 @@
     <!-- DataTables -->
     <link href="{{ asset('') }}assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet"
         type="text/css" />
-    <link href="{{ asset('') }}assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css"
-        rel="stylesheet" type="text/css" />
+    <link href="{{ asset('') }}assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet"
+        type="text/css" />
     <!-- Choices -->
     <link href="{{ asset('') }}assets/libs/choices.js/public/assets/styles/choices.min.css" rel="stylesheet"
         type="text/css" />
@@ -29,8 +29,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Bootstrap Css -->
-    <link href="{{ asset('') }}assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet"
-        type="text/css" />
+    <link href="{{ asset('') }}assets/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
     <link href="{{ asset('') }}assets/css/icons.min.css" rel="stylesheet" type="text/css" />
     <!-- App Css-->
@@ -119,8 +118,7 @@
                         <div class="dropdown-menu dropdown-menu-end">
                             <!-- item-->
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
+                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">
                                 <i class="mdi mdi-logout font-size-16 align-middle me-1"></i> Logout
                             </a>
@@ -228,6 +226,10 @@
                                         <a href="{{ route('master-departemen.index') }}" data-key="t-level-1-2">Master
                                             Master Departemen</a>
                                     </li>
+                                    <li>
+                                        <a href="{{ route('master-proyek.index') }}" data-key="t-level-1-2">Master
+                                            Master Kode Proyek</a>
+                                    </li>
                                 </ul>
                             </li>
                         @endcan
@@ -319,8 +321,7 @@
             <div class="p-4">
                 <h6 class="mb-3">Layout</h6>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="layout" id="layout-vertical"
-                        value="vertical">
+                    <input class="form-check-input" type="radio" name="layout" id="layout-vertical" value="vertical">
                     <label class="form-check-label" for="layout-vertical">Vertical</label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -337,8 +338,7 @@
                     <label class="form-check-label" for="layout-mode-light">Light</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="layout-mode" id="layout-mode-dark"
-                        value="dark">
+                    <input class="form-check-input" type="radio" name="layout-mode" id="layout-mode-dark" value="dark">
                     <label class="form-check-label" for="layout-mode-dark">Dark</label>
                 </div>
 
@@ -363,9 +363,8 @@
                     <label class="form-check-label" for="layout-position-fixed">Fixed</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="layout-position"
-                        id="layout-position-scrollable" value="scrollable"
-                        onchange="document.body.setAttribute('data-layout-scrollable', 'true')">
+                    <input class="form-check-input" type="radio" name="layout-position" id="layout-position-scrollable"
+                        value="scrollable" onchange="document.body.setAttribute('data-layout-scrollable', 'true')">
                     <label class="form-check-label" for="layout-position-scrollable">Scrollable</label>
                 </div>
 
@@ -377,8 +376,8 @@
                     <label class="form-check-label" for="topbar-color-light">Light</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="topbar-color" id="topbar-color-dark"
-                        value="dark" onchange="document.body.setAttribute('data-topbar', 'dark')">
+                    <input class="form-check-input" type="radio" name="topbar-color" id="topbar-color-dark" value="dark"
+                        onchange="document.body.setAttribute('data-topbar', 'dark')">
                     <label class="form-check-label" for="topbar-color-dark">Dark</label>
                 </div>
 
@@ -441,7 +440,8 @@
     <div class="rightbar-overlay"></div>
 
     <!-- JAVASCRIPT -->
-    {{-- <script src="{{ asset('') }}assets/libs/jquery/jquery.min.js"></script> --}}
+    {{--
+    <script src="{{ asset('') }}assets/libs/jquery/jquery.min.js"></script> --}}
     <script src="{{ asset('') }}assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('') }}assets/libs/metismenu/metisMenu.min.js"></script>
     <script src="{{ asset('') }}assets/libs/simplebar/simplebar.min.js"></script>

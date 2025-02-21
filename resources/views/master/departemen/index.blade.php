@@ -25,8 +25,7 @@
                     <td>{{ $departemen->Kode }}</td>
                     <td>{{ $departemen->NamaDepartemen }}</td>
                     <td class="text-center">
-                        <a href="{{ route('master-departemen.edit', $departemen->id) }}"
-                            class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{{ route('master-departemen.edit', $departemen->id) }}" class="btn btn-warning btn-sm">Edit</a>
                         <button type="button" class="btn btn-danger btn-sm btn-delete"
                             data-id="{{ $departemen->id }}">Hapus</button>
                     </td>
@@ -36,7 +35,7 @@
     </table>
     @if (session()->has('success'))
         <script>
-            setTimeout(function() {
+            setTimeout(function () {
                 swal.fire({
                     title: "{{ __('Sukses!') }}",
                     text: "{!! \Session::get('success') !!}",
@@ -47,48 +46,48 @@
     @endif
 @endsection
 @push('scripts')
-    <script>
-        $(document).ready(function() {
-            $('body').on('click', '.btn-delete', function() {
-                var id = $(this).data('id');
+<script>
+    $(document).ready(function () {
+        $('body').on('click', '.btn-delete', function () {
+            var id = $(this).data('id');
 
-                Swal.fire({
-                    title: 'Hapus Data',
-                    text: "Anda Ingin Menghapus Data?",
-                    icon: 'peringatan',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, Hapus'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: '{{ route('master-departemen.destroy', ':id') }}'.replace(
-                                ':id',
-                                id),
-                            type: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire(
-                                    'Dihapus',
-                                    'Data Berhasil Dihapus',
-                                    'sukses'
-                                );
+            Swal.fire({
+                title: 'Hapus Data',
+                text: "Anda Ingin Menghapus Data?",
+                icon: 'peringatan',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ route('master-departemen.destroy', ':id') }}'.replace(
+                            ':id',
+                            id),
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function (response) {
+                            Swal.fire(
+                                'Dihapus',
+                                'Data Berhasil Dihapus',
+                                'sukses'
+                            );
 
-                                $('#datatable').DataTable().ajax.reload();
-                            },
-                            error: function(xhr) {
-                                Swal.fire(
-                                    'Gagal!',
-                                    xhr.responseJSON.message || 'Gagal',
-                                    'error'
-                                );
-                                console.log(xhr.responseText);
-                            }
-                        });
-                    }
-                });
+                            $('#datatable').DataTable().ajax.reload();
+                        },
+                        error: function (xhr) {
+                            Swal.fire(
+                                'Gagal!',
+                                xhr.responseJSON.message || 'Gagal',
+                                'error'
+                            );
+                            console.log(xhr.responseText);
+                        }
+                    });
+                }
             });
-
         });
-    </script>
+
+    });
+</script>
