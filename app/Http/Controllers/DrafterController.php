@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\KodeProyek;
 use App\Models\MasterJenis;
 use App\Models\Surat;
 use App\Models\User;
@@ -52,11 +53,13 @@ class DrafterController extends Controller
     {
         $kategori = MasterJenis::where('Aktif', 'Y')->get();
         $penerima = User::orderBy('name', 'ASC')->get();
-        return view('drafter.create', compact('kategori', 'penerima'));
+        $KodeProject = KodeProyek::get();
+        return view('drafter.create', compact('kategori', 'penerima', 'KodeProject'));
     }
 
     public function store(Request $request)
     {
+        $KodeProject = $request->KodeProject;
         $namaccext = [];
         $data = $request->all();
         $isiSurat = htmlspecialchars_decode($request->Isi);
@@ -74,8 +77,8 @@ class DrafterController extends Controller
         // Simpan data ke database
         $surat = Surat::create([
             'idJenis' => $data['idJenis'],
-            'NomorProject' => $this->GenerateKode(),
-            'NomorSurat' => $this->GenerateKode(),
+            'NomorProject' => $this->GenerateKode($KodeProject),
+            'NomorSurat' => $this->GenerateKode($KodeProject),
             'TanggalSurat' => $data['TanggalSurat'],
             'Lampiran' => json_encode($lampiran),
             'PenerimaSurat' => $data['PenerimaSurat'],
@@ -135,8 +138,8 @@ class DrafterController extends Controller
 
         $templateProcessor->setImageValue('Qrcode', $barcode);
         $dataWord = [
-            'nomor' => $this->GenerateKode(),
-            'kodeproyek' => $this->GenerateKode(),
+            'nomor' => $this->GenerateKode($KodeProject),
+            'kodeproyek' => $this->GenerateKode($KodeProject),
             'tanggalterbit' => $data['TanggalSurat'],
             'penerima_int' => $NamaPenerima->name,
             'penerima_eks' => $NamaPenerima->name,
@@ -198,7 +201,7 @@ class DrafterController extends Controller
             ->causedBy(auth()->user())
             ->performedOn($surat)
             ->withProperties(['Perihal' => $data['Perihal']])
-            ->log('Menambahkan Surat Baru dengan Nomor: "' . $this->GenerateKode() . '"');
+            ->log('Menambahkan Surat Baru dengan Nomor: "' . $this->GenerateKode($KodeProject) . '"');
 
         return redirect()->route('drafter.index')->with('success', 'Surat berhasil disimpan dalam format DOCX dan PDF.');
     }
@@ -274,7 +277,7 @@ class DrafterController extends Controller
             ->causedBy(auth()->user())
             ->performedOn($surat)
             ->withProperties(['Perihal' => $data['Perihal']])
-            ->log('Mengubah Surat dengan Perihal: "' . $this->GenerateKode() . '"');
+            ->log('Mengubah Surat dengan Perihal: "' . $this->GenerateKode($KodeProject) . '"');
 
         return redirect()->route('drafter.index')->with('success', 'Surat Berhasil Diubah');
     }
@@ -298,25 +301,32 @@ class DrafterController extends Controller
         }
     }
 
-    private function GenerateKode()
+    private function GenerateKode($KodeProject)
     {
-        $companyName = 'PT';
-        $jenisSurat = 'SURAT';
+        // Ambil kode proyek dari tabel master proyek
+        $proyek = KodeProyek::find($KodeProject);
+
+        $kodeProyek = $proyek->Kode;
+        $fixedCode = 'DRWCDE';
         $month = date('m');
-        $romanMonths = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-        $monthRoman = $romanMonths[$month - 1];
         $year = date('Y');
-        $kode = Surat::whereYear('created_at', $year)
+
+        // Ambil surat terakhir di bulan dan tahun yang sama untuk proyek ini
+        $lastSurat = Surat::where('KodeProject', $KodeProject)
+            ->whereYear('created_at', $year)
             ->whereMonth('created_at', $month)
             ->orderBy('id', 'desc')
             ->first();
-        if ($kode) {
-            $lastId = (int) substr($kode->id, 0, 4);  // Get the numeric part of the last ID
-            $kodeSurat = str_pad($lastId + 1, 4, '0', STR_PAD_LEFT) . '/' . $companyName . '/' . $jenisSurat . '/' . $year;
+
+        if ($lastSurat) {
+            $lastId = (int) substr($lastSurat->id, -4);
+            $nomor = str_pad($lastId + 1, 4, '0', STR_PAD_LEFT);
         } else {
-            $kodeSurat = '0001/' . $companyName . '/' . $jenisSurat . '/' . $year;
+            $nomor = '0001';
         }
 
+        $revisi = '00';
+        $kodeSurat = $kodeProyek . '-' . $fixedCode . '-' . $nomor . '-' . $revisi;
         return $kodeSurat;
     }
 }

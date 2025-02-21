@@ -3,6 +3,7 @@
 use App\Http\Controllers\DrafterController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KodeProyekController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MasterDepartemenController;
 use App\Http\Controllers\MasterFieldsController;
@@ -85,6 +86,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('master-penerima-ext', MasterPenerimaEksternalController::class);
     Route::resource('master-field', MasterFieldsController::class);
     Route::resource('master-departemen', MasterDepartemenController::class);
+    Route::resource('master-proyek', KodeProyekController::class);
 
     Route::get('/fields', [FieldController::class, 'index'])->name('fields.index');
     Route::get('/generate-word', [MasterJenisController::class, 'generateWord']);
