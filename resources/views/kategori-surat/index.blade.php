@@ -21,6 +21,7 @@
                                     <th class="text-center">ID Jenis</th>
                                     <th class="text-center">Jenis Surat</th>
                                     <th class="text-center">Aktif</th>
+                                    <th class="text-center">Download File</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -128,6 +129,10 @@
                         {
                             data: 'status',
                             name: 'status'
+                        },
+                        {
+                            data: 'download',
+                            name: 'download'
                         },
                         {
                             data: 'action',

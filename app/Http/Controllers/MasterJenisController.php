@@ -32,7 +32,15 @@ class MasterJenisController extends Controller
                     $btnDelete = '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-md btn-delete" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
                     return $btnEdit . ' ' . $btnDelete;
                 })
-                ->rawColumns(['status', 'action'])
+                ->addColumn('download', function ($row) {
+                    $download = '<a href="' . asset('storage/FormatSurat/' . $row->FormatSurat) . '" class="btn btn-primary btn-md btn-download" title="Download" download>
+                    <i class="fas fa-download"></i> Download
+                </a>';
+
+                    return $download;
+                })
+
+                ->rawColumns(['status', 'action', 'download'])
                 ->make(true);
         }
         return view('kategori-surat.index');
