@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Departemen;
+use App\Models\MasterPenerimaEksternal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -153,6 +154,14 @@ class UserController extends Controller
     public function getUsers($id)
     {
         $user = User::with('getDepartmen')->find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User Tidak Ditemukan'], 404);
+        }
+        return response()->json($user);
+    }
+    public function getUsersEks($id)
+    {
+        $user = MasterPenerimaEksternal::find($id);
         if (!$user) {
             return response()->json(['message' => 'User Tidak Ditemukan'], 404);
         }

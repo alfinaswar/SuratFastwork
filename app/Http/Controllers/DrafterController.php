@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\KodeProyek;
 use App\Models\MasterJenis;
+use App\Models\MasterPenerimaEksternal;
 use App\Models\Surat;
 use App\Models\User;
 use Endroid\QrCode\Writer\PngWriter;
@@ -53,8 +54,9 @@ class DrafterController extends Controller
     {
         $kategori = MasterJenis::where('Aktif', 'Y')->get();
         $penerima = User::orderBy('name', 'ASC')->get();
+        $eksternal = MasterPenerimaEksternal::get();
         $KodeProject = KodeProyek::get();
-        return view('drafter.create', compact('kategori', 'penerima', 'KodeProject'));
+        return view('drafter.create', compact('kategori', 'penerima', 'KodeProject', 'eksternal'));
     }
 
     public function store(Request $request)

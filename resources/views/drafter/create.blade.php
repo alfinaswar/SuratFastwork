@@ -191,9 +191,9 @@
                                                             onchange="selectPenerimaExt(this)"
                                                             placeholder="This is a placeholder">
                                                             <option value="">Pilih Penerima</option>
-                                                            @foreach ($penerima as $p)
-                                                                <option value="{{ $p->id }}">{{ $p->name }} -
-                                                                    {{ $p->jabatan }}
+                                                            @foreach ($eksternal as $pa)
+                                                                <option value="{{ $pa->id }}">{{ $pa->Nama }} -
+                                                                    {{ $pa->Jabatan }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -288,9 +288,9 @@
                                                 <select class="form-control" data-trigger name="CarbonCopyExt[]"
                                                     id="choices-multiple-cc" placeholder="Pilih penerima CC" multiple>
                                                     <option>Pilih penerima</option>
-                                                    @foreach ($penerima as $p)
-                                                        <option value="{{ $p->id }}">{{ $p->name }} -
-                                                            {{ $p->jabatan }}
+                                                    @foreach ($eksternal as $pa2)
+                                                        <option value="{{ $pa2->id }}">{{ $pa2->Nama }} -
+                                                            {{ $pa2->Jabatan }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -346,9 +346,9 @@
                                                         id="choices-multiple-bcc" placeholder="Pilih penerima BC"
                                                         multiple>
                                                         <option>Pilih penerima</option>
-                                                        @foreach ($penerima as $p)
-                                                            <option value="{{ $p->id }}">{{ $p->name }} -
-                                                                {{ $p->jabatan }}
+                                                        @foreach ($eksternal as $pa2)
+                                                            <option value="{{ $pa2->id }}">{{ $pa2->Nama }} -
+                                                                {{ $pa2->Jabatan }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -478,16 +478,16 @@
             var idPenerima = data.value;
             $.ajax({
                 type: "GET",
-                url: "{{ route('users.get-users', '') }}/" + idPenerima,
+                url: "{{ route('users.get-users-eks', '') }}/" + idPenerima,
                 data: {},
                 dataType: "json",
                 success: function(response) {
-                    $("#InisialPenerimaExt").val(response.inisial);
-                    $("#JabatanExt").val(response.jabatan);
-                    $("#DepartemenExt").val(response.get_departmen.NamaDepartemen);
-                    $("#PerusahaanExt").val(response.perusahaan);
-                    $("#AlamatExt").val(response.alamat);
-                    $("#EmailExt").val(response.email);
+                    $("#InisialPenerimaExt").val(response.Inisial);
+                    $("#JabatanExt").val(response.Jabatan);
+                    $("#DepartemenExt").val(response.Departemen);
+                    $("#PerusahaanExt").val(response.Perusahaan);
+                    $("#AlamatExt").val(response.Alamat);
+                    $("#EmailExt").val(response.Email);
 
                 }
             });

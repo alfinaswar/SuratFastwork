@@ -73,6 +73,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::prefix('users')->group(function () {
         Route::GET('/get-users/{id}', [UserController::class, 'getUsers'])->name('users.get-users');
+        Route::GET('/get-users-eks/{id}', [UserController::class, 'getUsersEks'])->name('users.get-users-eks');
     });
     Route::resource('templates', TemplateController::class);
     Route::resource('drafter', DrafterController::class);
