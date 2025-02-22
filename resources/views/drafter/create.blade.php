@@ -52,7 +52,8 @@
                                                 id="choices-multiple-default" placeholder="This is a placeholder">
                                                 <option value="">Pilih Kategori Surat</option>
                                                 @foreach ($KodeProject as $p)
-                                                    <option value="{{ $p->id }}">{{ $p->Nama }} - {{ $p->Kode }}</option>
+                                                    <option value="{{ $p->id }}">{{ $p->Nama }} -
+                                                        {{ $p->Kode }}</option>
                                                 @endforeach
                                             </select>
                                             @error('idJenis')
@@ -80,7 +81,8 @@
                                     <div class="col-6">
                                         <div class="form-group mb-3">
                                             <label for="tanggal_surat">Tanggal Surat</label>
-                                            <input type="date" class="form-control" id="TanggalSurat" name="TanggalSurat">
+                                            <input type="date" class="form-control" id="TanggalSurat"
+                                                name="TanggalSurat">
                                             @error('TanggalSurat')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -201,8 +203,9 @@
                                                     </div>
                                                     <div class="form-group mb-3">
                                                         <label for="kepada">Inisial Penerima</label>
-                                                        <input type="text" name="InisialPenerima" id="InisialPenerimaExt"
-                                                            class="form-control" placeholder="Autofill" readonly>
+                                                        <input type="text" name="InisialPenerima"
+                                                            id="InisialPenerimaExt" class="form-control"
+                                                            placeholder="Autofill" readonly>
 
                                                     </div>
                                                     <div class="form-group mb-3">
@@ -272,7 +275,8 @@
                                 <div class="accordion-item" id="CCExternal">
                                     <h2 class="accordion-header" id="headingSix">
                                         <button class="accordion-button fw-medium" type="button"
-                                            data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                                            data-bs-target="#collapseSix" aria-expanded="true"
+                                            aria-controls="collapseSix">
                                             Carbon Copy Eksternal
                                         </button>
                                     </h2>
@@ -339,7 +343,8 @@
                                                 <div class="form-group mb-3">
                                                     <label for="bcc">Blind CC Eksternal</label>
                                                     <select class="form-control" data-trigger name="BlindCarbonCopyExt[]"
-                                                        id="choices-multiple-bcc" placeholder="Pilih penerima BC" multiple>
+                                                        id="choices-multiple-bcc" placeholder="Pilih penerima BC"
+                                                        multiple>
                                                         <option>Pilih penerima</option>
                                                         @foreach ($penerima as $p)
                                                             <option value="{{ $p->id }}">{{ $p->name }} -
@@ -368,8 +373,8 @@
                                             <div class="accordion-body">
                                                 <div class="form-group mb-3">
                                                     <label for="isi_surat">Isi Surat</label>
-                                                    <textarea class="form-control" id="ckeditor-classic" name="Isi"
-                                                        rows="10" placeholder="Masukkan isi surat"></textarea>
+                                                    <textarea class="form-control" id="ckeditor-classic" name="Isi" rows="10"
+                                                        placeholder="Masukkan isi surat"></textarea>
                                                     @error('Isi')
                                                         <div class="text-danger">{{ $message }}</div>
                                                     @enderror
@@ -379,11 +384,12 @@
 
                                     </div>
 
-                                    <div class="card-footer mt-3">
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
-                                        <a href="{{ route('drafter.index') }}" class="btn btn-secondary">Kembali</a>
-                                    </div>
+
                                 </div><!-- end accordion -->
+                                <div class="card-footer mt-3">
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                    <a href="{{ route('drafter.index') }}" class="btn btn-secondary">Kembali</a>
+                                </div>
                     </form>
                 </div><!-- end card-body -->
             </div><!-- end card -->
@@ -394,7 +400,7 @@
 @endsection
 @push('js')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#PenerimaInternal").hide();
             $("#PenerimaEksternal").hide();
             $("#CCInternal").hide();
@@ -410,7 +416,7 @@
                 url: "{{ route('kategori-surat.get-field', '') }}/" + id,
                 data: {},
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     // alert(response.PenerimaInternal);
                     if (response.PenerimaInternal == "YA") {
                         $("#PenerimaInternal").show();
@@ -455,7 +461,7 @@
                 url: "{{ route('users.get-users', '') }}/" + idPenerima,
                 data: {},
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     $("#InisialPenerima").val(response.inisial);
                     $("#JabatanInt").val(response.jabatan);
                     $("#DepartemenInt").val(response.get_departmen.NamaDepartemen);
@@ -475,7 +481,7 @@
                 url: "{{ route('users.get-users', '') }}/" + idPenerima,
                 data: {},
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     $("#InisialPenerimaExt").val(response.inisial);
                     $("#JabatanExt").val(response.jabatan);
                     $("#DepartemenExt").val(response.get_departmen.NamaDepartemen);
@@ -497,7 +503,7 @@
                 const previewElement = document.createElement('div');
                 previewElement.className = 'preview-item position-relative';
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     if (file.type.startsWith('image/')) {
                         previewElement.innerHTML = `
                                                                                                 <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
