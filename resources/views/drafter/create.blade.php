@@ -404,7 +404,8 @@
             $("#CCInternal").hide();
             $("#CCExternal").hide();
             $("#BCCInternal").hide();
-            $("#BCCExternal").hide();
+            $("#BCCExternal").hide();\
+            $("#IsiSuratCC").show();
         });
 
         function changeKategori(data) {
@@ -446,7 +447,7 @@
                     } else {
                         $("#BCCExternal").hide();
                     }
-                    $("#IsiSuratCC").show();
+
                 }
             });
         }
