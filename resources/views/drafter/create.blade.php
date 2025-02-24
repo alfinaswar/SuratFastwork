@@ -360,7 +360,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="accordion-item" id="IsiSuratCC">
+                                    <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingEight">
                                             <button class="accordion-button fw-medium" type="button"
                                                 data-bs-target="#collapseEight" aria-expanded="true"
@@ -368,22 +368,20 @@
                                                 Isi Surat
                                             </button>
                                         </h2>
-                                        <div id="collapseEight" class="accordion-collapse collapse show"
-                                            aria-labelledby="headingEight" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <div class="form-group mb-3">
-                                                    <label for="isi_surat">Isi Surat</label>
-                                                    <textarea class="form-control" id="ckeditor-classic" name="Isi" rows="10"
-                                                        placeholder="Masukkan isi surat"></textarea>
-                                                    @error('Isi')
-                                                        <div class="text-danger">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
+                                    </div>
+                                    <div id="collapseEight" class="accordion-collapse collapse show"
+                                        aria-labelledby="headingEight" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <div class="form-group mb-3">
+                                                <label for="isi_surat">Isi Surat</label>
+                                                <textarea class="form-control" id="ckeditor-classic" name="Isi" rows="10"
+                                                    placeholder="Masukkan isi surat"></textarea>
+                                                @error('Isi')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
-
                                     </div>
-
 
                                 </div><!-- end accordion -->
                                 <div class="card-footer mt-3">
