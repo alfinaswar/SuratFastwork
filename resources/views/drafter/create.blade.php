@@ -404,8 +404,8 @@
             $("#CCInternal").hide();
             $("#CCExternal").hide();
             $("#BCCInternal").hide();
-            $("#BCCExternal").hide();\
-            $("#IsiSuratCC").show();
+            $("#BCCExternal").hide();
+
         });
 
         function changeKategori(data) {
