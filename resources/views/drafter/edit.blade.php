@@ -444,7 +444,7 @@
                     Deverifikasi Pada <br>{{ $surat->VerifiedAt }}
                 </div>
             </div>
-            {!! $surat->getCatatan->Catatan !!}
+            {!! $surat->getCatatan->Catatan ?? 'Belum ada Catatan dari Verifikator' !!}
         </div>
     </div>
 @endsection
