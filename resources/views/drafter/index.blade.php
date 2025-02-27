@@ -2,7 +2,8 @@
 
 @section('content')
     <div class="d-flex justify-content-end align-items-center mb-4 flex-wrap">
-        <a href="{{ route('drafter.create') }}" class="btn btn-primary me-3 btn-sm"><i class="fas fa-plus me-2"></i>Tambah</a>
+        <a href="{{ route('drafter.create') }}" class="btn btn-primary me-3 btn-sm"><i
+                class="fas fa-plus me-2"></i>Tambah</a>
     </div>
 
     <div class="row">
@@ -19,6 +20,8 @@
                                     <th width="5%">#</th>
                                     <th>Nomor</th>
                                     <th>Perihal</th>
+                                    <th>Ajukan</th>
+
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -34,7 +37,7 @@
 
     @if (session()->has('success'))
         <script>
-            setTimeout(function() {
+            setTimeout(function () {
                 swal.fire({
                     title: "{{ __('Success!') }}",
                     text: "{!! \Session::get('success') !!}",
@@ -45,8 +48,8 @@
     @endif
     @push('js')
         <script>
-            $(document).ready(function() {
-                $('body').on('click', '.btn-delete', function() {
+            $(document).ready(function () {
+                $('body').on('click', '.btn-delete', function () {
                     var id = $(this).data('id');
 
                     Swal.fire({
@@ -63,7 +66,7 @@
                                 data: {
                                     _token: '{{ csrf_token() }}'
                                 },
-                                success: function(response) {
+                                success: function (response) {
                                     Swal.fire(
                                         'Dihapus',
                                         'Data Berhasil Dihapus',
@@ -72,7 +75,7 @@
 
                                     $('#datatable').DataTable().ajax.reload();
                                 },
-                                error: function(xhr) {
+                                error: function (xhr) {
                                     Swal.fire(
                                         'Gagal!',
                                         xhr.responseJSON.message || 'Gagal',
@@ -84,8 +87,45 @@
                         }
                     });
                 });
+                $('body').on('click', '.btn-ajukan', function () {
+                    var id = $(this).data('id');
 
-                var dataTable = function() {
+                    Swal.fire({
+                        title: 'Ajukan Draft Dokumen',
+                        text: "Anda Ingin Mengajukan Dokumen ini?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, Ajukan'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: '{{ route('drafter.ajukan', ':id') }}'.replace(':id', id),
+                                type: 'POST',
+                                data: {
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                success: function (response) {
+                                    Swal.fire(
+                                        'Sukses',
+                                        'Dokumen Berhasil Diajukan',
+                                        'success'
+                                    );
+
+                                    $('#datatable').DataTable().ajax.reload();
+                                },
+                                error: function (xhr) {
+                                    Swal.fire(
+                                        'Gagal!',
+                                        xhr.responseJSON.message || 'Gagal',
+                                        'error'
+                                    );
+                                    console.log(xhr.responseText);
+                                }
+                            });
+                        }
+                    });
+                });
+                var dataTable = function () {
                     var table = $('#datatable');
                     table.DataTable({
                         responsive: true,
@@ -101,27 +141,31 @@
                         },
                         ajax: "{{ route('drafter.index') }}",
                         columns: [{
-                                data: 'DT_RowIndex',
-                                name: 'DT_RowIndex'
-                            },
-                            {
-                                data: 'NomorSurat',
-                                name: 'NomorSurat'
-                            },
-                            {
-                                data: 'Perihal',
-                                name: 'Perihal'
-                            },
-                            {
-                                data: 'Status',
-                                name: 'Status'
-                            },
-                            {
-                                data: 'action',
-                                name: 'action',
-                                orderable: false,
-                                searchable: false
-                            },
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex'
+                        },
+                        {
+                            data: 'NomorSurat',
+                            name: 'NomorSurat'
+                        },
+                        {
+                            data: 'Perihal',
+                            name: 'Perihal'
+                        },
+                        {
+                            data: 'ajukan',
+                            name: 'ajukan'
+                        },
+                        {
+                            data: 'Status',
+                            name: 'Status'
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        },
                         ]
                     });
                 };

@@ -16,7 +16,7 @@ class VerifikatorController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Surat::latest()->get();
+            $data = Surat::where('Status', 'Submited')->latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -45,6 +45,9 @@ class VerifikatorController extends Controller
                             break;
                         case 'Read':
                             $StatusLabel = '<span class="badge bg-light"><i class="fas fa-eye"></i> Telah Dibaca</span>';
+                            break;
+                        case 'Submited':
+                            $StatusLabel = '<span class="badge bg-primary"><i class="fas fa-paper-plane"></i> Baru Diajukan</span>';
                             break;
                         default:
                             $StatusLabel = '<span class="badge bg-dark"><i class="fas fa-question-circle"></i> Tidak Diketahui</span>';

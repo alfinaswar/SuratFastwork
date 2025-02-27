@@ -75,6 +75,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::GET('/get-users/{id}', [UserController::class, 'getUsers'])->name('users.get-users');
         Route::GET('/get-users-eks/{id}', [UserController::class, 'getUsersEks'])->name('users.get-users-eks');
     });
+    Route::prefix('drafter')->group(function () {
+        Route::POST('/ajukan-dokumen/{id}', [DrafterController::class, 'ajukandokumen'])->name('drafter.ajukan');
+    });
     Route::resource('templates', TemplateController::class);
     Route::resource('drafter', DrafterController::class);
     Route::resource('verifikator', VerifikatorController::class);

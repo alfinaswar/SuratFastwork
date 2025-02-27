@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->string('PengirimSurat')->nullable();
             $table->json('CarbonCopy')->nullable();
             $table->json('BlindCarbonCopy')->nullable();
-            $table->enum('Status', ['Draft', 'Verified', 'Approved', 'Revision', 'Sent', 'Received', 'Read'])->default('Draft');
+            $table->enum('Status', ['Draft', 'Sumbited', 'Verified', 'Approved', 'Revision', 'Sent', 'Received', 'Read'])->default('Draft');
             $table->unsignedBigInteger('VerifiedBy')->nullable();
             $table->dateTime('VerifiedAt')->nullable();
             $table->unsignedBigInteger('ApprovedBy')->nullable();

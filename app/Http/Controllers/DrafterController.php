@@ -40,8 +40,17 @@ class DrafterController extends Controller
                         $btnDelete = '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-md btn-delete" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
                         return $btnEdit . ' ' . $btnDelete;
                     }
+
                 })
-                ->rawColumns(['action', 'StatusLabel'])
+                ->addColumn('ajukan', function ($row) {
+                    if ($row->Status == 'Draft') {
+                        $btnAjukan = '<a href="' . route('drafter.ajukan', $row->id) . '" class="btn btn-success btn-md btn-ajukan" title="Ajukan"><i class="fas fa-paper-plane"></i></a>';
+                        return $btnAjukan;
+                    } else {
+                        return 'Sudah diajukan';
+                    }
+                })
+                ->rawColumns(['action', 'StatusLabel', 'ajukan'])
                 ->make(true);
         }
         return view('drafter.index');
@@ -58,7 +67,16 @@ class DrafterController extends Controller
         $KodeProject = KodeProyek::get();
         return view('drafter.create', compact('kategori', 'penerima', 'KodeProject', 'eksternal'));
     }
+    public function ajukandokumen($id)
+    {
+        $surat = Surat::find($id);
+        // dd($surat);
+        $surat->update([
+            'Status' => 'Submited',
+        ]);
 
+        return redirect()->route('drafter.index')->with('success', 'Surat berhasil diajukan');
+    }
     public function store(Request $request)
     {
         $KodeProject = $request->KodeProject;
