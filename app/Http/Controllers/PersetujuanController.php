@@ -55,17 +55,26 @@ class PersetujuanController extends Controller
 
     public function show($id)
     {
-        $surat = Surat::with(['getPenerima', 'getPenulis', 'getCatatan' => function ($query) use ($id) {
-            $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
-        }])->findOrFail($id);
+        $surat = Surat::with([
+            'getPenerima',
+            'getPenulis',
+            'getCatatan' => function ($query) use ($id) {
+                $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
+            }
+        ])->findOrFail($id);
         $Lampiran = json_decode($surat->Lampiran);
         $ambilCC = User::whereIn('id', $surat->CarbonCopy)->get();
-        $ambilBlindCC = User::whereIn('id', $surat->BlindCarbonCopy)->get();
+        if ($surat->BlindCarbonCopy != null) {
+            $ambilBlindCC = User::whereIn('id', $surat->BlindCarbonCopy)->get();
+        } else {
+            $ambilBlindCC = null;
+        }
         $surat['CC'] = $ambilCC;
         $surat['CarbonCC'] = $ambilBlindCC;
         $surat['FileLampiran'] = $Lampiran;
         // dd($surat);
         return view('persetujuan.show', compact('surat'));
+
     }
 
     public function approve($id)

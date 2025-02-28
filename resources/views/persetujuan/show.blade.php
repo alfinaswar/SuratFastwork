@@ -48,16 +48,18 @@
                                                 </h5>
                                             </div>
                                         </div>
-                                        <div class="col-4">
-                                            <div>
-                                                <p class="mb-2 text-muted text-uppercase font-size-11">Blind Carbon Copy</p>
-                                                <h5 class="fw-medium">
-                                                    @foreach ($surat->CarbonCC as $carbon)
-                                                        <span class="badge bg-primary">{{ $carbon->name }}</span>,
-                                                    @endforeach
-                                                </h5>
+                                        @if($surat->CarbonCC != null)
+                                            <div class="col-4">
+                                                <div>
+                                                    <p class="mb-2 text-muted text-uppercase font-size-11">Blind Carbon Copy</p>
+                                                    <h5 class="fw-medium">
+                                                        @foreach ($surat->CarbonCC as $carbon)
+                                                            <span class="badge bg-primary">{{ $carbon->name }}</span>,
+                                                        @endforeach
+                                                    </h5>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
 
                                     </div>
                                     <div class="col-12 mt-3">
@@ -92,7 +94,7 @@
                                         <i class="mdi mdi-check-all label-icon"></i><strong>Catatan</strong> - Catatan
                                         Verfikator
                                     </div>
-                                    {!! $surat->getCatatan->Catatan !!}
+                                    {!! $surat->getCatatan->Catatan ?? 'Tidak ada catatan' !!}
                                 </div>
                             </div>
                         </div>
@@ -152,9 +154,9 @@
                 reader.onload = function (e) {
                     if (file.type.startsWith('image/')) {
                         previewElement.innerHTML = `
-                                                                                                        <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
-                                                                                                        <div class="mt-1">${file.name}</div>
-                                                                                                    `;
+                                                                                                                                                    <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                                                                                                                                    <div class="mt-1">${file.name}</div>
+                                                                                                                                                `;
                     } else {
                         let fileIcon = '📄';
                         if (file.type.includes('pdf')) fileIcon = '📕';
@@ -162,11 +164,11 @@
                         else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
 
                         previewElement.innerHTML = `
-                                                                                                        <div class="text-center">
-                                                                                                            <div style="font-size: 2rem;">${fileIcon}</div>
-                                                                                                            <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
-                                                                                                        </div>
-                                                                                                    `;
+                                                                                                                                                    <div class="text-center">
+                                                                                                                                                        <div style="font-size: 2rem;">${fileIcon}</div>
+                                                                                                                                                        <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
+                                                                                                                                                    </div>
+                                                                                                                                                `;
                     }
                 };
 
