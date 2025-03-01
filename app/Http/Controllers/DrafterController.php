@@ -38,7 +38,8 @@ class DrafterController extends Controller
                     } else {
                         $btnEdit = '<a href="' . route('drafter.edit', $row->id) . '" class="btn btn-primary btn-md btn-edit" title="Edit"><i class="fas fa-edit"></i></a>';
                         $btnDelete = '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-md btn-delete" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
-                        return $btnEdit . ' ' . $btnDelete;
+                        $download = '<a href="' . route('surat-terkirim.download', $row->id) . '" class="btn btn-success btn-md btn-download" title="Download"><i class="fas fa-download"></i></a>';
+                        return $btnEdit . ' ' . $btnDelete . ' ' . $download;
                     }
 
                 })
