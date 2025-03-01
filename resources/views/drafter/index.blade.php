@@ -89,7 +89,6 @@
                 });
                 $('body').on('click', '.btn-ajukan', function () {
                     var id = $(this).data('id');
-
                     Swal.fire({
                         title: 'Ajukan Draft Dokumen',
                         text: "Anda Ingin Mengajukan Dokumen ini?",
