@@ -50,10 +50,11 @@
                                             <label for="tanggal_surat">Kode Project</label>
                                             <select class="form-control" data-trigger name="KodeProject"
                                                 id="choices-multiple-default" placeholder="This is a placeholder">
-                                                <option value="">Pilih Kategori Surat</option>
+                                                <option value="">Pilih Kode Project</option>
                                                 @foreach ($KodeProject as $p)
                                                     <option value="{{ $p->id }}">{{ $p->Nama }} -
-                                                        {{ $p->Kode }}</option>
+                                                        {{ $p->Kode }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                             @error('idJenis')
@@ -81,8 +82,7 @@
                                     <div class="col-6">
                                         <div class="form-group mb-3">
                                             <label for="tanggal_surat">Tanggal Surat</label>
-                                            <input type="date" class="form-control" id="TanggalSurat"
-                                                name="TanggalSurat">
+                                            <input type="date" class="form-control" id="TanggalSurat" name="TanggalSurat">
                                             @error('TanggalSurat')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -203,9 +203,8 @@
                                                     </div>
                                                     <div class="form-group mb-3">
                                                         <label for="kepada">Inisial Penerima</label>
-                                                        <input type="text" name="InisialPenerima"
-                                                            id="InisialPenerimaExt" class="form-control"
-                                                            placeholder="Autofill" readonly>
+                                                        <input type="text" name="InisialPenerima" id="InisialPenerimaExt"
+                                                            class="form-control" placeholder="Autofill" readonly>
 
                                                     </div>
                                                     <div class="form-group mb-3">
@@ -275,8 +274,7 @@
                                 <div class="accordion-item" id="CCExternal">
                                     <h2 class="accordion-header" id="headingSix">
                                         <button class="accordion-button fw-medium" type="button"
-                                            data-bs-target="#collapseSix" aria-expanded="true"
-                                            aria-controls="collapseSix">
+                                            data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
                                             Carbon Copy Eksternal
                                         </button>
                                     </h2>
@@ -343,8 +341,7 @@
                                                 <div class="form-group mb-3">
                                                     <label for="bcc">Blind CC Eksternal</label>
                                                     <select class="form-control" data-trigger name="BlindCarbonCopyExt[]"
-                                                        id="choices-multiple-bcc" placeholder="Pilih penerima BC"
-                                                        multiple>
+                                                        id="choices-multiple-bcc" placeholder="Pilih penerima BC" multiple>
                                                         <option>Pilih penerima</option>
                                                         @foreach ($eksternal as $pa2)
                                                             <option value="{{ $pa2->id }}">{{ $pa2->Nama }} -
@@ -392,7 +389,7 @@
 @endsection
 @push('js')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#PenerimaInternal").hide();
             $("#PenerimaEksternal").hide();
             $("#CCInternal").hide();
@@ -409,7 +406,7 @@
                 url: "{{ route('kategori-surat.get-field', '') }}/" + id,
                 data: {},
                 dataType: "json",
-                success: function(response) {
+                success: function (response) {
                     $("#IsiSurat").show();
                     if (response.PenerimaInternal == "YA") {
                         $("#PenerimaInternal").show();
@@ -454,7 +451,7 @@
                 url: "{{ route('users.get-users', '') }}/" + idPenerima,
                 data: {},
                 dataType: "json",
-                success: function(response) {
+                success: function (response) {
                     $("#InisialPenerima").val(response.inisial);
                     $("#JabatanInt").val(response.jabatan);
                     $("#DepartemenInt").val(response.get_departmen.NamaDepartemen);
@@ -474,7 +471,7 @@
                 url: "{{ route('users.get-users-eks', '') }}/" + idPenerima,
                 data: {},
                 dataType: "json",
-                success: function(response) {
+                success: function (response) {
                     $("#InisialPenerimaExt").val(response.Inisial);
                     $("#JabatanExt").val(response.Jabatan);
                     $("#DepartemenExt").val(response.Departemen);
@@ -496,12 +493,12 @@
                 const previewElement = document.createElement('div');
                 previewElement.className = 'preview-item position-relative';
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     if (file.type.startsWith('image/')) {
                         previewElement.innerHTML = `
-                                                                                                <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
-                                                                                                <div class="mt-1">${file.name}</div>
-                                                                                            `;
+                                                                                                        <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                                                                                        <div class="mt-1">${file.name}</div>
+                                                                                                    `;
                     } else {
                         let fileIcon = '📄';
                         if (file.type.includes('pdf')) fileIcon = '📕';
@@ -509,11 +506,11 @@
                         else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
 
                         previewElement.innerHTML = `
-                                                                                                <div class="text-center">
-                                                                                                    <div style="font-size: 2rem;">${fileIcon}</div>
-                                                                                                    <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
-                                                                                                </div>
-                                                                                            `;
+                                                                                                        <div class="text-center">
+                                                                                                            <div style="font-size: 2rem;">${fileIcon}</div>
+                                                                                                            <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
+                                                                                                        </div>
+                                                                                                    `;
                     }
                 };
 

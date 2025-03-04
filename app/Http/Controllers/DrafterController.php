@@ -259,8 +259,12 @@ class DrafterController extends Controller
     public function edit($id)
     {
         $surat = Surat::with('getCatatan', 'getVerifikator')->findOrFail($id);
+        $kategori = MasterJenis::where('Aktif', 'Y')->get();
+        $penerima = User::orderBy('name', 'ASC')->get();
+        $eksternal = MasterPenerimaEksternal::get();
+        $KodeProject = KodeProyek::get();
 
-        return view('drafter.edit', compact('surat'));
+        return view('drafter.edit', compact('surat', 'kategori', 'penerima', 'eksternal', 'KodeProject'));
     }
 
     /**
@@ -299,11 +303,15 @@ class DrafterController extends Controller
 
         $surat->update([
             'idJenis' => json_encode($data['idJenis']),
+            'KodeProject' => $data['KodeProject'],
             'TanggalSurat' => $data['TanggalSurat'],
             'Lampiran' => json_encode($lampiran),
             'PenerimaSurat' => $data['PenerimaSurat'],
+            'PenerimaSuratEks' => $data['PenerimaSuratEksternal'],
             'CarbonCopy' => $data['CarbonCopy'] ?? null,
-            'BlindCarbonCopy' => $data['BlindCarbonCopy'] ?? null,
+            'CarbonCopyEks' => $data['CarbonCopyExt'] ?? null,
+            'BlindCarbonCopy' => $data['BlindCarbonCopyInt'] ?? null,
+            'BlindCarbonCopyEks' => $data['BlindCarbonCopyExt'] ?? null,
             'Perihal' => $data['Perihal'],
             'Isi' => $data['Isi'],
             'DieditOleh' => auth()->user()->id,

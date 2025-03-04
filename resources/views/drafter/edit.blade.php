@@ -56,7 +56,25 @@
                                             @enderror
                                         </div>
                                     </div>
+                                    <div class="col-12">
+                                        <div class="form-group mb-3">
+                                            <label for="tanggal_surat">Kode Project</label>
+                                            <select class="form-control" data-trigger name="KodeProject" id="choices-multiple-default"
+                                                placeholder="This is a placeholder">
+                                                <option value="">Pilih Kode Project</option>
+                                                @foreach ($KodeProject as $p)
+                                                    <option value="{{ $p->id }}" @if ($surat->KodeProject == $p->id) selected @endif>
+                                                        {{ $p->Kode }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('KodeProject')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
                         </div><!-- end card header -->
 
@@ -199,11 +217,11 @@
                                                                 onchange="selectPenerimaExt(this)"
                                                                 placeholder="This is a placeholder">
                                                                 <option value="">Pilih Penerima</option>
-                                                                @foreach ($penerima as $p)
+                                                                @foreach ($eksternal as $p)
                                                                     <option value="{{ $p->id }}"
                                                                         @if ($surat->PenerimaSuratEksternal == $p->id) selected @endif>
-                                                                        {{ $p->name }} -
-                                                                        {{ $p->jabatan }}
+                                                                        {{ $p->Nama }} -
+                                                                        {{ $p->Jabatan }}
                                                                     </option>
                                                                 @endforeach
                                                             </select>
@@ -294,37 +312,36 @@
                                     </div>
                                 @endif
                                 @if ($surat->CarbonCopyEks)
-                                    <div class="accordion-item" id="CCExternal">
-                                        <h2 class="accordion-header" id="headingSix">
-                                            <button class="accordion-button fw-medium" type="button"
-                                                data-bs-target="#collapseSix" aria-expanded="true"
-                                                aria-controls="collapseSix">
-                                                Carbon Copy Eksternal
-                                            </button>
-                                        </h2>
-                                        <div id="collapseSix" class="accordion-collapse collapse show"
-                                            aria-labelledby="headingSix" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <div class="form-group mb-3">
-                                                    <label for="cc">Carbon Copy Eksternal</label>
-                                                    <select class="form-control" data-trigger name="CarbonCopyExt[]"
-                                                        id="choices-multiple-cc" placeholder="Pilih penerima CC" multiple>
-                                                        <option value="">Pilih penerima</option>
-                                                        @foreach ($penerima as $p)
-                                                            <option value="{{ $p->id }}"
-                                                                @if (in_array($p->id, $surat->CarbonCopy)) selected @endif>
-                                                                {{ $p->name }} -
-                                                                {{ $p->jabatan }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    @error('CarbonCopy')
-                                                        <div class="text-danger">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                                        <div class="accordion-item" id="CCExternal">
+                                                                            <h2 class="accordion-header" id="headingSix">
+                                                                                <button class="accordion-button fw-medium" type="button"
+                                                                                    data-bs-target="#collapseSix" aria-expanded="true"
+                                                                                    aria-controls="collapseSix">
+                                                                                    Carbon Copy Eksternal
+                                                                                </button>
+                                                                            </h2>
+                                                                            <div id="collapseSix" class="accordion-collapse collapse show"
+                                                                                aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+                                                                                <div class="accordion-body">
+                                                                                    <div class="form-group mb-3">
+                                                                                        <label for="cc">Carbon Copy Eksternal</label>
+                                                                                        <select class="form-control" data-trigger name="CarbonCopyExt[]"
+                                                                                            id="choices-multiple-cc" placeholder="Pilih penerima CC" multiple>
+                                                                                            <option value="">Pilih penerima</option>
+                                    @foreach ($eksternal as $p)
+                                        <option value="{{ $p->id }}" @if ($surat->CarbonCopyEks == $p->id) selected @endif>
+                                            {{ $p->Nama }} -
+                                            {{ $p->Jabatan }}
+                                        </option>
+                                    @endforeach
+                                                                                        </select>
+                                                                                        @error('CarbonCopy')
+                                                                                            <div class="text-danger">{{ $message }}</div>
+                                                                                        @enderror
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                 @endif
                                 @if ($surat->BlindCarbonCopy)
                                     <div class="accordion-item" id="BCCInternal">
@@ -377,11 +394,10 @@
                                                         id="choices-multiple-bcc" placeholder="Pilih penerima BC"
                                                         multiple>
                                                         <option value="">Pilih penerima</option>
-                                                        @foreach ($penerima as $p)
-                                                            <option value="{{ $p->id }}"
-                                                                @if (in_array($p->id, $surat->BlindCarbonCopyEks)) selected @endif>
-                                                                {{ $p->name }} -
-                                                                {{ $p->jabatan }}
+                                                        @foreach ($eksternal as $p)
+                                                            <option value="{{ $p->id }}" @if ($surat->BlindCarbonCopyEks == $p->id) selected @endif>
+                                                                {{ $p->Nama }} -
+                                                                {{ $p->Jabatan }}
                                                             </option>
                                                         @endforeach
                                                     </select>
