@@ -24,6 +24,10 @@ class Surat extends Model
     {
         return $this->belongsTo(User::class, 'PenerimaSurat', 'id');
     }
+    public function getPenerimaEks()
+    {
+        return $this->belongsTo(MasterPenerimaEksternal::class, 'PenerimaSuratEks', 'id');
+    }
     public function NamaPengirim()
     {
         return $this->belongsTo(User::class, 'SentBy', 'id');

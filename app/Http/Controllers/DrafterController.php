@@ -36,10 +36,11 @@ class DrafterController extends Controller
     </span>';
                         return $status;
                     } else {
-                        $btnEdit = '<a href="' . route('drafter.edit', $row->id) . '" class="btn btn-primary btn-md btn-edit" title="Edit"><i class="fas fa-edit"></i></a>';
-                        $btnDelete = '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-md btn-delete" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
-                        $download = '<a href="' . route('verifikator.download-preview', $row->id) . '" class="btn btn-success btn-md btn-download" title="Download"><i class="fas fa-download"></i></a>';
-                        return $btnEdit . ' ' . $btnDelete . ' ' . $download;
+                        $btnEdit = '<a href="' . route('drafter.edit', $row->id) . '" class="btn btn-info btn-md btn-edit" title="Edit"><i class="fas fa-edit"></i></a>';
+                        $btnDelete = '<a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-warning btn-md btn-delete" title="Hapus"><i class="fas fa-trash-alt"></i></a>';
+                        $download = '<a href="' . route('verifikator.download-preview', $row->id) . '" class="btn btn-secondary btn-md btn-download" title="Download"><i class="fas fa-download"></i></a>';
+                        $view = '<a href="' . route('drafter.show', $row->id) . '" class="btn btn-light btn-md btn-download" title="Download"><i class="fas fa-eye"></i></a>';
+                        return $btnEdit . ' ' . $btnDelete . ' ' . $download . ' ' . $view;
                     }
 
                 })
@@ -230,9 +231,26 @@ class DrafterController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $surat = Surat::with([
+            'getPenerima',
+            'getPenerimaEks',
+            'getPenulis',
+            'NamaPengirim',
+            'getCatatan' => function ($query) use ($id) {
+                $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
+            }
+        ])->findOrFail($id);
+        $ambilCC = User::whereIn('id', $surat->CarbonCopy)->get();
+        if ($surat->BlindCarbonCopy != null) {
+            $ambilBlindCC = User::whereIn('id', $surat->BlindCarbonCopy)->get();
+        } else {
+            $ambilBlindCC = null;
+        }
+        $surat['CC'] = $ambilCC;
+        $surat['BlindCC'] = $ambilBlindCC;
+        return view('drafter.show', compact('surat'));
     }
 
     /**
@@ -241,10 +259,8 @@ class DrafterController extends Controller
     public function edit($id)
     {
         $surat = Surat::with('getCatatan', 'getVerifikator')->findOrFail($id);
-        $kategori = MasterJenis::all();
-        $penerima = User::all();
 
-        return view('drafter.edit', compact('surat', 'kategori', 'penerima'));
+        return view('drafter.edit', compact('surat'));
     }
 
     /**
