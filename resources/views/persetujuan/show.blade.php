@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     <div class="row">
         <div class="row justify-content-center">
             <div class="col-xl-12">
@@ -14,6 +15,9 @@
                                 <a href="{{ route('verifikator.download-preview', $surat->id) }}"
                                     class="btn btn-primary btn-sm">Unduh
                                     Draft Surat</a>
+                                <a href="{{ route('persetujuan.show-surat', $surat->id) }}"
+                                    class="btn btn-secondary btn-sm">Tampilkan
+                                    Surat</a>
                             </div>
                         </div>
 
@@ -154,9 +158,9 @@
                 reader.onload = function (e) {
                     if (file.type.startsWith('image/')) {
                         previewElement.innerHTML = `
-                                                                                                                                                    <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
-                                                                                                                                                    <div class="mt-1">${file.name}</div>
-                                                                                                                                                `;
+                                                                                                                                                                                                <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                                                                                                                                                                                <div class="mt-1">${file.name}</div>
+                                                                                                                                                                                            `;
                     } else {
                         let fileIcon = '📄';
                         if (file.type.includes('pdf')) fileIcon = '📕';
@@ -164,11 +168,11 @@
                         else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
 
                         previewElement.innerHTML = `
-                                                                                                                                                    <div class="text-center">
-                                                                                                                                                        <div style="font-size: 2rem;">${fileIcon}</div>
-                                                                                                                                                        <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
-                                                                                                                                                    </div>
-                                                                                                                                                `;
+                                                                                                                                                                                                <div class="text-center">
+                                                                                                                                                                                                    <div style="font-size: 2rem;">${fileIcon}</div>
+                                                                                                                                                                                                    <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
+                                                                                                                                                                                                </div>
+                                                                                                                                                                                            `;
                     }
                 };
 

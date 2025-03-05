@@ -1,9 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+    <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
     <div class="container"
         style="width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20px; border: 1px solid #000; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
         <header style="text-align: center; margin-bottom: 20px;">
+
             <h2>{{ $surat->KodeProject }} - {{ $surat->NomorSurat }}</h2>
             <p>{{ date('d F Y', strtotime($surat->TanggalSurat)) }}</p>
         </header>

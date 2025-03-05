@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CatatanSurat;
 use App\Models\Surat;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -129,7 +130,28 @@ class VerifikatorController extends Controller
         // dd($surat);
         return view('verifikator.show', compact('surat'));
     }
-
+    public function showPreview($id)
+    {
+        $surat = Surat::with([
+            'getPenerima',
+            'getPenerimaEks',
+            'getPenulis',
+            'NamaPengirim',
+            'getCatatan' => function ($query) use ($id) {
+                $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
+            }
+        ])->findOrFail($id);
+        $ambilCC = User::whereIn('id', $surat->CarbonCopy)->get();
+        if ($surat->BlindCarbonCopy != null) {
+            $ambilBlindCC = User::whereIn('id', $surat->BlindCarbonCopy)->get();
+        } else {
+            $ambilBlindCC = null;
+        }
+        $surat['CC'] = $ambilCC;
+        $surat['BlindCC'] = $ambilBlindCC;
+        // dd($surat);
+        return view('verifikator.show-preview', compact('surat'));
+    }
     /**
      * Show the form for editing the specified resource.
      */

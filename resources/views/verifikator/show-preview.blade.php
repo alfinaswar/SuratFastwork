@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    <a href="{{ url()->previous() }}" class="btn btn-primary">Kembali</a>
     <div class="container"
         style="width: 210mm; min-height: 297mm; margin: 0 auto; padding: 20px; border: 1px solid #000; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
         <header style="text-align: center; margin-bottom: 20px;">
@@ -82,6 +83,8 @@
         <footer style="margin-top: 50px;">
             <p><strong>Dibuat Oleh:</strong> {{ $surat->getPenulis->name }}</p>
             <p><strong>Status:</strong> {{ $surat->Status }}</p>
+
         </footer>
     </div>
+
 @endsection

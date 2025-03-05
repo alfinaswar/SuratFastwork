@@ -76,6 +76,28 @@ class PersetujuanController extends Controller
         return view('persetujuan.show', compact('surat'));
 
     }
+    public function showPreview($id)
+    {
+        $surat = Surat::with([
+            'getPenerima',
+            'getPenerimaEks',
+            'getPenulis',
+            'NamaPengirim',
+            'getCatatan' => function ($query) use ($id) {
+                $query->where('DibuatOleh', auth()->user()->id)->where('idSurat', $id);
+            }
+        ])->findOrFail($id);
+        $ambilCC = User::whereIn('id', $surat->CarbonCopy)->get();
+        if ($surat->BlindCarbonCopy != null) {
+            $ambilBlindCC = User::whereIn('id', $surat->BlindCarbonCopy)->get();
+        } else {
+            $ambilBlindCC = null;
+        }
+        $surat['CC'] = $ambilCC;
+        $surat['BlindCC'] = $ambilBlindCC;
+        // dd($surat);
+        return view('persetujuan.show-surat', compact('surat'));
+    }
 
     public function approve($id)
     {

@@ -14,6 +14,9 @@
                                 <a href="{{ route('verifikator.download-preview', $surat->id) }}"
                                     class="btn btn-primary btn-sm">Unduh
                                     Draft Surat</a>
+                                <a href="{{ route('verifikator.show-surat', $surat->id) }}"
+                                    class="btn btn-secondary btn-sm">Tampilkan
+                                    Surat</a>
                             </div>
                         </div>
 
@@ -75,7 +78,8 @@
 
                             <div class="form-group mb-3">
                                 <label for="revisi">Catatan Revisi</label>
-                                <textarea name="Catatan" class="form-control"id="ckeditor-classic" name="Isi" rows="10">{{ old('revisi', $surat->getCatatan->Catatan ?? '') }}</textarea>
+                                <textarea name="Catatan" class="form-control" id="ckeditor-classic" name="Isi"
+                                    rows="10">{{ old('revisi', $surat->getCatatan->Catatan ?? '') }}</textarea>
                             </div>
                             <input type="hidden" name="idsurat" value="{{ old('idsurat', $surat->id) }}">
 

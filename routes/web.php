@@ -51,10 +51,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::GET('/show/{id}', [PersetujuanController::class, 'show'])->name('persetujuan-surat.show');
         Route::GET('/approve/{id}', [PersetujuanController::class, 'approve'])->name('persetujuan.approve');
         Route::GET('/reject/{id}', [PersetujuanController::class, 'reject'])->name('persetujuan.reject');
+        Route::GET('/lihat-preview/{id}', [PersetujuanController::class, 'showPreview'])->name('persetujuan.show-surat');
     });
 
     Route::prefix('verifikator')->group(function () {
         Route::GET('/download-preview/{id}', [VerifikatorController::class, 'show'])->name('verifikator.preview');
+        Route::GET('/lihat-preview/{id}', [VerifikatorController::class, 'showPreview'])->name('verifikator.show-surat');
         Route::GET('/download-preview/{id}', [VerifikatorController::class, 'downloadPreview'])->name('verifikator.download-preview');
     });
     Route::prefix('surat-terkirim')->group(function () {
