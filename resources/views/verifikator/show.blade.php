@@ -78,8 +78,7 @@
 
                             <div class="form-group mb-3">
                                 <label for="revisi">Catatan Revisi</label>
-                                <textarea name="Catatan" class="form-control" id="ckeditor-classic" name="Isi"
-                                    rows="10">{{ old('revisi', $surat->getCatatan->Catatan ?? '') }}</textarea>
+                                <textarea name="Catatan" class="form-control" id="ckeditor-classic" name="Isi" rows="10">{{ old('revisi', $surat->getCatatan->Catatan ?? '') }}</textarea>
                             </div>
                             <input type="hidden" name="idsurat" value="{{ old('idsurat', $surat->id) }}">
 
