@@ -130,10 +130,10 @@ class DrafterController extends Controller
         $NamaPenerima = User::with('getDepartmen')->where('id', $request->PenerimaSurat)->first();
 
         $datasurat = Surat::with('NamaPengirim')->latest()->first();
-        $NamaCCInternal = User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopy)->get() ?? null;
-        $NamaCCExternal = User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopyEks)->get() ?? null;
-        $NamaBCCInternal = User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopy)->get() ?? null;
-        $NamaBCCExternal = User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopyEks)->get() ?? null;
+        $NamaCCInternal = $datasurat->CarbonCopy ? User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopy)->get() : null;
+        $NamaCCExternal = $datasurat->CarbonCopyEks ? User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopyEks)->get() : null;
+        $NamaBCCInternal = $datasurat->BlindCarbonCopy ? User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopy)->get() : null;
+        $NamaBCCExternal = $datasurat->BlindCarbonCopyEks ? User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopyEks)->get() : null;
 
         function formatUserList($users)
         {
