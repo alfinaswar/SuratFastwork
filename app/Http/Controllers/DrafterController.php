@@ -138,16 +138,16 @@ class DrafterController extends Controller
         function formatUserList($users)
         {
             $output = [];
-            foreach ($users as $index => $user) {
-                $output[] = ($index + 1) . '. ' . $user->name . ' - ' . $user->getDepartmen->NamaDepartemen . ' - ' . $user->perusahaan;
+            foreach ($users as $user) {
+                $output[] = $user->name . ' - ' . $user->getDepartmen->NamaDepartemen . ' - ' . $user->perusahaan;
             }
             return implode("\n", $output);
         }
 
-        $formattedCCInternal = formatUserList($NamaCCInternal);
-        $formattedCCExternal = formatUserList($NamaCCExternal);
-        $formattedBCCInternal = formatUserList($NamaBCCInternal);
-        $formattedBCCExternal = formatUserList($NamaBCCExternal);
+        $formattedCCInternal = $NamaCCInternal ? formatUserList($NamaCCInternal) : null;
+        $formattedCCExternal = $NamaCCExternal ? formatUserList($NamaCCExternal) : null;
+        $formattedBCCInternal = $NamaBCCInternal ? formatUserList($NamaBCCInternal) : null;
+        $formattedBCCExternal = $NamaBCCExternal ? formatUserList($NamaBCCExternal) : null;
 
         $writer = new PngWriter();
         $link = route('surat.digital', $surat->id);
