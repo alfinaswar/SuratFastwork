@@ -46,6 +46,17 @@
             }, 1000);
         </script>
     @endif
+    @if (session()->has('error'))
+        <script>
+            setTimeout(function () {
+                swal.fire({
+                    title: "{{ __('Error!') }}",
+                    text: "{!! \Session::get('error') !!}",
+                    icon: "error"
+                });
+            }, 1000);
+        </script>
+    @endif
     @push('js')
         <script>
             $(document).ready(function () {
