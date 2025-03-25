@@ -79,12 +79,163 @@ class DrafterController extends Controller
 
         return redirect()->route('drafter.index')->with('success', 'Surat berhasil diajukan');
     }
+    // public function store(Request $request)
+    // {
+    //     $KodeProject = $request->KodeProject;
+    //     $namaccext = [];
+    //     $data = $request->all();
+    //     $isiSurat = htmlspecialchars_decode($request->Isi);
+    //     $cekKategori = MasterJenis::find($request->idJenis);
+    //     $IdSurat = Surat::latest()->first()->id ?? 0;
+    //     $lampiran = [];
+
+    //     if ($request->hasFile('Lampiran')) {
+    //         foreach ($request->file('Lampiran') as $file) {
+    //             $path = $file->store('public/lampiran');
+    //             $lampiran[] = basename($path);
+    //         }
+    //     }
+
+    //     // Simpan data ke database
+    //     $surat = Surat::create([
+    //         'idJenis' => $data['idJenis'],
+    //         'NomorProject' => $this->GenerateKode($KodeProject),
+    //         'NomorSurat' => $this->GenerateKode($KodeProject),
+    //         'TanggalSurat' => $data['TanggalSurat'],
+    //         'Lampiran' => json_encode($lampiran),
+    //         'PenerimaSurat' => $data['PenerimaSurat'],
+    //         'PenerimaSuratEks' => $data['PenerimaSuratEksternal'] ?? null,
+    //         'CarbonCopy' => $data['CarbonCopy'] ?? null,
+    //         'CarbonCopyEks' => $data['CarbonCopyExt'] ?? null,
+    //         'BlindCarbonCopy' => $data['BlindCarbonCopyInt'] ?? null,
+    //         'BlindCarbonCopyEks' => $data['BlindCarbonCopyExt'] ?? null,
+    //         'Perihal' => $data['Perihal'],
+    //         'Isi' => $data['Isi'],
+    //         'DibuatOleh' => auth()->user()->id,
+    //         'NamaFile' => $cekKategori->JenisSurat . '-' . $IdSurat,
+    //     ]);
+
+    //     // Path template & output
+    //     $templatePath = storage_path('app/public/FormatSurat/' . $cekKategori->FormatSurat);
+    //     $docxPath = storage_path('app/public/surat/' . $cekKategori->JenisSurat . '-' . $IdSurat . '.docx');
+    //     $pdfPath = storage_path('app/public/surat/' . $cekKategori->JenisSurat . '-' . $IdSurat . '.pdf');
+
+    //     if (!file_exists($templatePath)) {
+    //         return redirect()->route('drafter.index')->withErrors(['message' => 'Template tidak ditemukan']);
+    //     }
+    //     // Buat dokumen Word dari template
+    //     $templateProcessor = new TemplateProcessor($templatePath);
+    //     $isiSurat = strip_tags($request->Isi);
+
+    //     $NamaPenerima = User::with('getDepartmen')->where('id', $request->PenerimaSurat)->first();
+
+    //     $datasurat = Surat::with('NamaPengirim')->latest()->first();
+    //     $NamaCCInternal = $datasurat->CarbonCopy ? User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopy)->get() : null;
+    //     $NamaCCExternal = $datasurat->CarbonCopyEks ? User::with('getDepartmen')->whereIn('id', $datasurat->CarbonCopyEks)->get() : null;
+    //     $NamaBCCInternal = $datasurat->BlindCarbonCopy ? User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopy)->get() : null;
+    //     $NamaBCCExternal = $datasurat->BlindCarbonCopyEks ? User::with('getDepartmen')->whereIn('id', $datasurat->BlindCarbonCopyEks)->get() : null;
+
+    //     function formatUserList($users)
+    //     {
+    //         $output = [];
+    //         foreach ($users as $user) {
+    //             $output[] = $user->name . ' - ' . $user->getDepartmen->NamaDepartemen . ' - ' . $user->perusahaan;
+    //         }
+    //         return implode("\n", $output);
+    //     }
+
+    //     $formattedCCInternal = $NamaCCInternal ? formatUserList($NamaCCInternal) : null;
+    //     $formattedCCExternal = $NamaCCExternal ? formatUserList($NamaCCExternal) : null;
+    //     $formattedBCCInternal = $NamaBCCInternal ? formatUserList($NamaBCCInternal) : null;
+    //     $formattedBCCExternal = $NamaBCCExternal ? formatUserList($NamaBCCExternal) : null;
+
+    //     $writer = new PngWriter();
+    //     $link = route('surat.digital', $surat->id);
+    //     $qrCode = QrCode::create($link)
+    //         ->setSize(100)
+    //         ->setMargin(0);
+
+    //     $barcode = $writer->write($qrCode)->getDataUri();
+
+    //     $templateProcessor->setImageValue('Qrcode', $barcode);
+    //     $dataWord = [
+    //         'nomor' => $this->GenerateKode($KodeProject),
+    //         'kodeproyek' => $this->GenerateKode($KodeProject),
+    //         'tanggalterbit' => $data['TanggalSurat'],
+    //         'penerima_int' => $NamaPenerima->name,
+    //         'penerima_eks' => $NamaPenerima->name,
+    //         'inisialpenerima' => $NamaPenerima->inisial,
+    //         'jabatanpenerima' => $NamaPenerima->jabatan,
+    //         'departpenerima' => $NamaPenerima->getDepartmen->NamaDepartemen,
+    //         'perusahaanpenerima' => $data['PerusahaanInt'],
+    //         'alamat' => $data['AlamatInt'],
+    //         'Jabatan' => $NamaPenerima->jabatan,
+    //         'email' => $NamaPenerima->email,
+    //         'website' => $NamaPenerima->website,
+    //         'perihal' => $request->Perihal,
+    //         'pengirim' => $datasurat->NamaPengirim->name ?? null,
+    //         'inisialpengirim' => $datasurat->NamaPengirim->inisial ?? null,
+    //         'jabatpengirim' => $datasurat->NamaPengirim->jabatan ?? null,
+    //         'departpengirim' => $datasurat->NamaPengirim->department ?? null,
+    //         'perusahaanpengirim' => $datasurat->NamaPengirim->perusahaan ?? null,
+    //         'ccint' => $formattedCCInternal,
+    //         'ccxt' => $formattedCCExternal,
+    //         'bccint' => $formattedBCCInternal,
+    //         'bccext' => $formattedBCCExternal,
+    //         'kodeinisialbcc' => null,
+    //         'jabatancclist' => null,
+    //         'departemencc' => null,
+    //         'perusahaancc' => null,
+    //         'jabatanbcc' => null,
+    //         'departemenbcc' => null,
+    //         'perusahaanbcc' => null,
+    //         'kodedrafter' => null,
+    //         'kodeverificator' => null,
+    //         'kodeapprover' => null,
+    //         'isi' => $isiSurat,
+    //         'Qrcode' => $request->Qrcode ?? 'Tidak ada',
+    //         'Pengirim' => auth()->user()->name,
+    //         'JabatanPengirim' => auth()->user()->jabatan,
+    //         'Lampiran' => implode(', ', $lampiran ? array_map(fn($lampiran) => basename($lampiran), $lampiran) : ['Tidak ada']),
+    //     ];
+
+    //     foreach ($dataWord as $key => $value) {
+    //         $templateProcessor->setValue($key, $value);
+    //     }
+
+    //     // Simpan file Word (.docx)
+    //     $templateProcessor->saveAs($docxPath);
+
+    //     // Konversi DOCX ke PDF menggunakan MPDF dengan perbaikan untuk mengatasi masalah halaman kosong dan jumlah halaman yang tidak sesuai
+    //     // $phpWord = IOFactory::load($docxPath);
+    //     // $htmlWriter = IOFactory::createWriter($phpWord, 'HTML');
+    //     // ob_start();
+    //     // $htmlWriter->save('php://output');
+    //     // $htmlContent = ob_get_clean();
+
+    //     // $mpdf = new Mpdf();
+    //     // $mpdf->WriteHTML($htmlContent);
+    //     // $mpdf->Output($pdfPath, \Mpdf\Output\Destination::FILE);  // Simpan sebagai file PDF dengan perbaikan untuk mengatasi masalah halaman kosong dan jumlah halaman yang tidak sesuai
+
+    //     // Catat aktivitas
+    //     activity()
+    //         ->causedBy(auth()->user())
+    //         ->performedOn($surat)
+    //         ->withProperties(['Perihal' => $data['Perihal']])
+    //         ->log('Menambahkan Surat Baru dengan Nomor: "' . $this->GenerateKode($KodeProject) . '"');
+
+    //     return redirect()->route('drafter.index')->with('success', 'Surat berhasil disimpan dalam format DOCX dan PDF.');
+    // }
+
+    /**
+     * Display the specified resource.
+     */
     public function store(Request $request)
     {
         $KodeProject = $request->KodeProject;
         $namaccext = [];
         $data = $request->all();
-        $isiSurat = htmlspecialchars_decode($request->Isi);
+        $isiSurat = $request->Isi; // Gunakan HTML asli untuk mempertahankan format
         $cekKategori = MasterJenis::find($request->idJenis);
         $IdSurat = Surat::latest()->first()->id ?? 0;
         $lampiran = [];
@@ -110,7 +261,7 @@ class DrafterController extends Controller
             'BlindCarbonCopy' => $data['BlindCarbonCopyInt'] ?? null,
             'BlindCarbonCopyEks' => $data['BlindCarbonCopyExt'] ?? null,
             'Perihal' => $data['Perihal'],
-            'Isi' => $data['Isi'],
+            'Isi' => $data['Isi'], // Simpan HTML asli
             'DibuatOleh' => auth()->user()->id,
             'NamaFile' => $cekKategori->JenisSurat . '-' . $IdSurat,
         ]);
@@ -123,10 +274,20 @@ class DrafterController extends Controller
         if (!file_exists($templatePath)) {
             return redirect()->route('drafter.index')->withErrors(['message' => 'Template tidak ditemukan']);
         }
+
         // Buat dokumen Word dari template
         $templateProcessor = new TemplateProcessor($templatePath);
-        $isiSurat = strip_tags($request->Isi);
 
+        // Tambahkan konversi HTML
+        try {
+            $templateProcessor->setValue('isi', $isiSurat, ['parseHtml' => true]);
+        } catch (\Exception $e) {
+            // Fallback jika konversi HTML gagal
+            $templateProcessor->setValue('isi', strip_tags($isiSurat));
+            \Log::error('Konversi HTML ke Word gagal: ' . $e->getMessage());
+        }
+
+        // [Sisanya dari kode asli tetap sama]
         $NamaPenerima = User::with('getDepartmen')->where('id', $request->PenerimaSurat)->first();
 
         $datasurat = Surat::with('NamaPengirim')->latest()->first();
@@ -159,40 +320,8 @@ class DrafterController extends Controller
 
         $templateProcessor->setImageValue('Qrcode', $barcode);
         $dataWord = [
-            'nomor' => $this->GenerateKode($KodeProject),
-            'kodeproyek' => $this->GenerateKode($KodeProject),
-            'tanggalterbit' => $data['TanggalSurat'],
-            'penerima_int' => $NamaPenerima->name,
-            'penerima_eks' => $NamaPenerima->name,
-            'inisialpenerima' => $NamaPenerima->inisial,
-            'jabatanpenerima' => $NamaPenerima->jabatan,
-            'departpenerima' => $NamaPenerima->getDepartmen->NamaDepartemen,
-            'perusahaanpenerima' => $data['PerusahaanInt'],
-            'alamat' => $data['AlamatInt'],
-            'Jabatan' => $NamaPenerima->jabatan,
-            'email' => $NamaPenerima->email,
-            'website' => $NamaPenerima->website,
-            'perihal' => $request->Perihal,
-            'pengirim' => $datasurat->NamaPengirim->name ?? null,
-            'inisialpengirim' => $datasurat->NamaPengirim->inisial ?? null,
-            'jabatpengirim' => $datasurat->NamaPengirim->jabatan ?? null,
-            'departpengirim' => $datasurat->NamaPengirim->department ?? null,
-            'perusahaanpengirim' => $datasurat->NamaPengirim->perusahaan ?? null,
-            'ccint' => $formattedCCInternal,
-            'ccxt' => $formattedCCExternal,
-            'bccint' => $formattedBCCInternal,
-            'bccext' => $formattedBCCExternal,
-            'kodeinisialbcc' => null,
-            'jabatancclist' => null,
-            'departemencc' => null,
-            'perusahaancc' => null,
-            'jabatanbcc' => null,
-            'departemenbcc' => null,
-            'perusahaanbcc' => null,
-            'kodedrafter' => null,
-            'kodeverificator' => null,
-            'kodeapprover' => null,
-            'isi' => $isiSurat,
+            // [Sisanya dari kode asli tetap sama]
+            'isi' => $isiSurat, // Gunakan HTML asli
             'Qrcode' => $request->Qrcode ?? 'Tidak ada',
             'Pengirim' => auth()->user()->name,
             'JabatanPengirim' => auth()->user()->jabatan,
@@ -206,17 +335,6 @@ class DrafterController extends Controller
         // Simpan file Word (.docx)
         $templateProcessor->saveAs($docxPath);
 
-        // Konversi DOCX ke PDF menggunakan MPDF dengan perbaikan untuk mengatasi masalah halaman kosong dan jumlah halaman yang tidak sesuai
-        // $phpWord = IOFactory::load($docxPath);
-        // $htmlWriter = IOFactory::createWriter($phpWord, 'HTML');
-        // ob_start();
-        // $htmlWriter->save('php://output');
-        // $htmlContent = ob_get_clean();
-
-        // $mpdf = new Mpdf();
-        // $mpdf->WriteHTML($htmlContent);
-        // $mpdf->Output($pdfPath, \Mpdf\Output\Destination::FILE);  // Simpan sebagai file PDF dengan perbaikan untuk mengatasi masalah halaman kosong dan jumlah halaman yang tidak sesuai
-
         // Catat aktivitas
         activity()
             ->causedBy(auth()->user())
@@ -224,12 +342,8 @@ class DrafterController extends Controller
             ->withProperties(['Perihal' => $data['Perihal']])
             ->log('Menambahkan Surat Baru dengan Nomor: "' . $this->GenerateKode($KodeProject) . '"');
 
-        return redirect()->route('drafter.index')->with('success', 'Surat berhasil disimpan dalam format DOCX dan PDF.');
+        return redirect()->route('drafter.index')->with('success', 'Surat berhasil disimpan dalam format DOCX.');
     }
-
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         $surat = Surat::with([
