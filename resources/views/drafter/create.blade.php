@@ -24,11 +24,8 @@
                         <div class="card-header">
 
                             <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <h4 class="card-title">BUAT DRAFT SURAT</h4>
-                                </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="col-12">
                                         <div class="form-group mb-3">
                                             <label for="tanggal_surat">Kategori Surat</label>
@@ -496,9 +493,9 @@
                 reader.onload = function (e) {
                     if (file.type.startsWith('image/')) {
                         previewElement.innerHTML = `
-                                                                                                        <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
-                                                                                                        <div class="mt-1">${file.name}</div>
-                                                                                                    `;
+                                                                                                            <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                                                                                            <div class="mt-1">${file.name}</div>
+                                                                                                        `;
                     } else {
                         let fileIcon = '📄';
                         if (file.type.includes('pdf')) fileIcon = '📕';
@@ -506,11 +503,11 @@
                         else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
 
                         previewElement.innerHTML = `
-                                                                                                        <div class="text-center">
-                                                                                                            <div style="font-size: 2rem;">${fileIcon}</div>
-                                                                                                            <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
-                                                                                                        </div>
-                                                                                                    `;
+                                                                                                            <div class="text-center">
+                                                                                                                <div style="font-size: 2rem;">${fileIcon}</div>
+                                                                                                                <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
+                                                                                                            </div>
+                                                                                                        `;
                     }
                 };
 

@@ -235,7 +235,7 @@ class DrafterController extends Controller
         $KodeProject = $request->KodeProject;
         $namaccext = [];
         $data = $request->all();
-        $isiSurat = $request->Isi; // Gunakan HTML asli untuk mempertahankan format
+        $isiSurat = $request->Isi;
         $cekKategori = MasterJenis::find($request->idJenis);
         $IdSurat = Surat::latest()->first()->id ?? 0;
         $lampiran = [];
@@ -247,7 +247,6 @@ class DrafterController extends Controller
             }
         }
 
-        // Simpan data ke database
         $surat = Surat::create([
             'idJenis' => $data['idJenis'],
             'NomorProject' => $this->GenerateKode($KodeProject),
@@ -266,19 +265,17 @@ class DrafterController extends Controller
             'NamaFile' => $cekKategori->JenisSurat . '-' . $IdSurat,
         ]);
 
-        // Path template & output
+
         $templatePath = storage_path('app/public/FormatSurat/' . $cekKategori->FormatSurat);
         $docxPath = storage_path('app/public/surat/' . $cekKategori->JenisSurat . '-' . $IdSurat . '.docx');
         $pdfPath = storage_path('app/public/surat/' . $cekKategori->JenisSurat . '-' . $IdSurat . '.pdf');
 
         if (!file_exists($templatePath)) {
-            return redirect()->route('drafter.index')->withErrors(['message' => 'Template tidak ditemukan']);
+            return redirect()->route('drafter.index')->with('error', 'Tidak Ditemukan');
         }
 
-        // Buat dokumen Word dari template
         $templateProcessor = new TemplateProcessor($templatePath);
 
-        // Tambahkan konversi HTML
         try {
             $templateProcessor->setValue('isi', $isiSurat, ['parseHtml' => true]);
         } catch (\Exception $e) {
@@ -320,7 +317,7 @@ class DrafterController extends Controller
 
         $templateProcessor->setImageValue('Qrcode', $barcode);
         $dataWord = [
-            // [Sisanya dari kode asli tetap sama]
+            // [Sisanya dari kode asli tetap   sama]
             'isi' => $isiSurat, // Gunakan HTML asli
             'Qrcode' => $request->Qrcode ?? 'Tidak ada',
             'Pengirim' => auth()->user()->name,
