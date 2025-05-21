@@ -123,8 +123,11 @@ class DrafterController extends Controller
         if (!file_exists($templatePath)) {
             return redirect()->route('drafter.index')->withErrors(['message' => 'Template tidak ditemukan']);
         }
+
         // Buat dokumen Word dari template
         $templateProcessor = new TemplateProcessor($templatePath);
+
+        // Ambil isi surat dari request (konten HTML)
         $isiSurat = $request->Isi;
 
         $NamaPenerima = User::with('getDepartmen')->where('id', $request->PenerimaSurat)->first();
@@ -156,7 +159,10 @@ class DrafterController extends Controller
             ->setMargin(0);
 
         $barcode = $writer->write($qrCode)->getDataUri();
-        $templateProcessor->setValue('isi', $isiSurat);
+
+        // Khusus untuk isi surat, kita konversi HTML ke format Word
+        $this->insertHtmlToTemplate($templateProcessor, 'isi', $isiSurat);
+
         $templateProcessor->setImageValue('Qrcode', $barcode);
         $dataWord = [
             'nomor' => $this->GenerateKode($KodeProject),
@@ -192,7 +198,7 @@ class DrafterController extends Controller
             'kodedrafter' => null,
             'kodeverificator' => null,
             'kodeapprover' => null,
-            // 'isi' => $isiSurat,
+            // Hapus 'isi' dari sini karena sudah diproses secara terpisah
             'Qrcode' => $request->Qrcode ?? 'Tidak ada',
             'Pengirim' => auth()->user()->name,
             'JabatanPengirim' => auth()->user()->jabatan,
@@ -203,7 +209,7 @@ class DrafterController extends Controller
             $templateProcessor->setValue($key, $value);
         }
 
-        // Simpan file Word (.docx)
+        // Simpan dokumen
         $templateProcessor->saveAs($docxPath);
 
         // Konversi DOCX ke PDF menggunakan MPDF dengan perbaikan untuk mengatasi masalah halaman kosong dan jumlah halaman yang tidak sesuai
@@ -482,5 +488,42 @@ class DrafterController extends Controller
         $revisi = '00';
         $kodeSurat = $kodeProyek . '-' . $fixedCode . '-' . $nomor . '-' . $revisi;
         return $kodeSurat;
+    }
+    protected function insertHtmlToTemplate($templateProcessor, $placeholder, $htmlContent)
+    {
+        // Pastikan PhpWord dan library pendukung sudah diimpor
+        // use PhpOffice\PhpWord\PhpWord;
+        // use PhpOffice\PhpWord\Shared\Html;
+
+        // Buat objek PHPWord baru
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $section = $phpWord->addSection();
+
+        // Konversi HTML ke konten Word
+        \PhpOffice\PhpWord\Shared\Html::addHtml($section, $htmlContent, false, false);
+
+        // Simpan sementara ke file XML
+        $xmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $tempFile = tempnam(sys_get_temp_dir(), 'html_content');
+        $xmlWriter->save($tempFile);
+
+        // Ekstrak konten dari file XML
+        $zip = new \ZipArchive();
+        if ($zip->open($tempFile) === true) {
+            $content = $zip->getFromName('word/document.xml');
+            $zip->close();
+
+            // Cari konten aktual (abaikan bagian header XML)
+            $pattern = '/<w:body>(.*?)<w:sectPr>/s';
+            if (preg_match($pattern, $content, $matches)) {
+                $wordContent = $matches[1];
+
+                // Set nilai ke dalam template sebagai kompleks (XML)
+                $templateProcessor->setValue('${' . $placeholder . '}', $wordContent, 1);
+            }
+        }
+
+        // Hapus file sementara
+        @unlink($tempFile);
     }
 }
