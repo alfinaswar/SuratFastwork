@@ -23,27 +23,7 @@
                         <p>{{ $surat->getPenerimaEks->Nama ?? '' }}</p>
                     </section>
                 </div>
-                @if ($surat->CarbonCopy != null)
-                    <div class="col-md-6">
-                        <section>
-                            <p><strong>CC:</strong></p>
-                            @foreach ($surat->CC as $cc)
-                                <p>{{ $cc->name }} - {{ $cc->perusahaan ?? 'tidak di isi' }}</p>
-                            @endforeach
-                        </section>
-                    </div>
-                @endif
-                @if ($surat->BlindCarbonCopy != null)
-                    <div class="col-md-6">
-                        <section>
-                            <p><strong>BCC:</strong></p>
-                            @foreach ($surat->BlindCC as $bcc)
-                                <p>{{ $bcc->name }} - {{ $bcc->perusahaan ?? 'tidak di isi' }}</p>
-                            @endforeach
-                        </section>
-                    </div>
-
-                @endif
+               
             </div>
         </section>
 
@@ -85,6 +65,28 @@
             <p><strong>Status:</strong> {{ $surat->Status }}</p>
 
         </footer>
+
+         @if ($surat->CarbonCopy != null)
+                    <div class="col-md-6">
+                        <section>
+                            <p><strong>CC:</strong></p>
+                            @foreach ($surat->CC as $cc)
+                                <p>{{ $cc->name }} - {{ $cc->perusahaan ?? 'tidak di isi' }}</p>
+                            @endforeach
+                        </section>
+                    </div>
+                @endif
+                @if ($surat->BlindCarbonCopy != null)
+                    <div class="col-md-6">
+                        <section>
+                            <p><strong>BCC:</strong></p>
+                            @foreach ($surat->BlindCC as $bcc)
+                                <p>{{ $bcc->name }} - {{ $bcc->perusahaan ?? 'tidak di isi' }}</p>
+                            @endforeach
+                        </section>
+                    </div>
+
+                @endif
     </div>
 
 @endsection
