@@ -116,7 +116,7 @@
                                                             id="choices-multiple-default PenerimaSurat"
                                                             onchange="selectPenerimaInt(this)"
                                                             placeholder="This is a placeholder">
-                                                            <option>Pilih Penerima</option>
+
                                                             @foreach ($penerima as $p)
                                                                 <option value="{{ $p->id }}">{{ $p->name }} -
                                                                     {{ $p->jabatan }}
@@ -282,7 +282,7 @@
                                                 <label for="cc">Carbon Copy Eksternal</label>
                                                 <select class="form-control" data-trigger name="CarbonCopyExt[]"
                                                     id="choices-multiple-cc" placeholder="Pilih penerima CC" multiple>
-                                                    <option>Pilih penerima</option>
+
                                                     @foreach ($eksternal as $pa2)
                                                         <option value="{{ $pa2->id }}">{{ $pa2->Nama }} -
                                                             {{ $pa2->Jabatan }}
@@ -310,7 +310,7 @@
                                                     <label for="cc">Blind Carbon Copy Internal</label>
                                                     <select class="form-control" data-trigger name="BlindCarbonCopyInt[]"
                                                         id="choices-multiple-cc" placeholder="Pilih penerima CC" multiple>
-                                                        <option>Pilih penerima</option>
+
                                                         @foreach ($penerima as $p)
                                                             <option value="{{ $p->id }}">{{ $p->name }} -
                                                                 {{ $p->jabatan }}
@@ -339,7 +339,7 @@
                                                     <label for="bcc">Blind CC Eksternal</label>
                                                     <select class="form-control" data-trigger name="BlindCarbonCopyExt[]"
                                                         id="choices-multiple-bcc" placeholder="Pilih penerima BC" multiple>
-                                                        <option>Pilih penerima</option>
+
                                                         @foreach ($eksternal as $pa2)
                                                             <option value="{{ $pa2->id }}">{{ $pa2->Nama }} -
                                                                 {{ $pa2->Jabatan }}
@@ -493,9 +493,9 @@
                 reader.onload = function (e) {
                     if (file.type.startsWith('image/')) {
                         previewElement.innerHTML = `
-                                                                                                            <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
-                                                                                                            <div class="mt-1">${file.name}</div>
-                                                                                                        `;
+                                                                                                                <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                                                                                                <div class="mt-1">${file.name}</div>
+                                                                                                            `;
                     } else {
                         let fileIcon = '📄';
                         if (file.type.includes('pdf')) fileIcon = '📕';
@@ -503,11 +503,11 @@
                         else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
 
                         previewElement.innerHTML = `
-                                                                                                            <div class="text-center">
-                                                                                                                <div style="font-size: 2rem;">${fileIcon}</div>
-                                                                                                                <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
-                                                                                                            </div>
-                                                                                                        `;
+                                                                                                                <div class="text-center">
+                                                                                                                    <div style="font-size: 2rem;">${fileIcon}</div>
+                                                                                                                    <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
+                                                                                                                </div>
+                                                                                                            `;
                     }
                 };
 

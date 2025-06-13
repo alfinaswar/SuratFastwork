@@ -132,8 +132,8 @@
                                                             <select class="form-control" data-trigger name="PenerimaSurat"
                                                                 id="choices-multiple-default PenerimaSurat"
                                                                 onchange="selectPenerimaInt(this)"
-                                                                placeholder="This is a placeholder">
-                                                                <option>Pilih Penerima</option>
+                                                                placeholder="Pilih Penerima">
+
                                                                 @foreach ($penerima as $p)
                                                                     <option value="{{ $p->id }}"
                                                                         @if ($surat->PenerimaSurat == $p->id) selected @endif>
@@ -215,8 +215,8 @@
                                                                 name="PenerimaSuratEksternal"
                                                                 id="choices-multiple-default"
                                                                 onchange="selectPenerimaExt(this)"
-                                                                placeholder="This is a placeholder">
-                                                                <option value="">Pilih Penerima</option>
+                                                                placeholder="Pilih Peneirma">
+
                                                                 @foreach ($eksternal as $p)
                                                                     <option value="{{ $p->id }}"
                                                                         @if ($surat->PenerimaSuratEksternal == $p->id) selected @endif>
@@ -294,7 +294,7 @@
                                                     <label for="cc">Carbon Copy Internal</label>
                                                     <select class="form-control" data-trigger name="CarbonCopy[]"
                                                         id="choices-multiple-cc" placeholder="Pilih penerima CC" multiple>
-                                                        <option value="">Pilih penerima CC</option>
+
                                                         @foreach ($penerima as $p)
                                                             <option value="{{ $p->id }}"
                                                                 @if (in_array($p->id, $surat->CarbonCopy)) selected @endif>
@@ -327,7 +327,7 @@
                                                                                         <label for="cc">Carbon Copy Eksternal</label>
                                                                                         <select class="form-control" data-trigger name="CarbonCopyExt[]"
                                                                                             id="choices-multiple-cc" placeholder="Pilih penerima CC" multiple>
-                                                                                            <option value="">Pilih penerima</option>
+
                                     @foreach ($eksternal as $p)
                                         <option value="{{ $p->id }}" @if ($surat->CarbonCopyEks == $p->id) selected @endif>
                                             {{ $p->Nama }} -
@@ -393,7 +393,7 @@
                                                     <select class="form-control" data-trigger name="BlindCarbonCopyExt[]"
                                                         id="choices-multiple-bcc" placeholder="Pilih penerima BC"
                                                         multiple>
-                                                        <option value="">Pilih penerima</option>
+
                                                         @foreach ($eksternal as $p)
                                                             <option value="{{ $p->id }}" @if ($surat->BlindCarbonCopyEks == $p->id) selected @endif>
                                                                 {{ $p->Nama }} -
