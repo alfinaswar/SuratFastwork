@@ -116,12 +116,6 @@
                                                             id="choices-multiple-default PenerimaSurat"
                                                             onchange="selectPenerimaInt(this)"
                                                             placeholder="This is a placeholder">
-
-                                                            @foreach ($penerima as $p)
-                                                                <option value="{{ $p->id }}">{{ $p->name }} -
-                                                                    {{ $p->jabatan }}
-                                                                </option>
-                                                            @endforeach
                                                         </select>
                                                         @error('PenerimaSurat')
                                                             <div class="text-danger">{{ $message }}</div>
@@ -282,7 +276,6 @@
                                                 <label for="cc">Carbon Copy Eksternal</label>
                                                 <select class="form-control" data-trigger name="CarbonCopyExt[]"
                                                     id="choices-multiple-cc" placeholder="Pilih penerima CC" multiple>
-
                                                     @foreach ($eksternal as $pa2)
                                                         <option value="{{ $pa2->id }}">{{ $pa2->Nama }} -
                                                             {{ $pa2->Jabatan }}
@@ -396,6 +389,28 @@
             $("#IsiSurat").show();
         });
 
+        function Select2PenerimaSurat() {
+            $('#PenerimaSurat').select2({
+                placeholder: "Select Data",
+                minimumInputLength: 1,
+                ajax: {
+                    url: "{{ route('drafter.getPenerimaSurat') }},
+                        dataType: 'json',
+                    delay: 250,
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item, key) {
+                                return {
+                                    text: item,
+                                    id: item
+                                }
+                            })
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
         function changeKategori(data) {
             var id = data.value;
             $.ajax({
@@ -493,9 +508,9 @@
                 reader.onload = function (e) {
                     if (file.type.startsWith('image/')) {
                         previewElement.innerHTML = `
-                                                                                                                <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
-                                                                                                                <div class="mt-1">${file.name}</div>
-                                                                                                            `;
+                                                                                                                                                                                                <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
+                                                                                                                                                                                                <div class="mt-1">${file.name}</div>
+                                                                                                                                                                                            `;
                     } else {
                         let fileIcon = '📄';
                         if (file.type.includes('pdf')) fileIcon = '📕';
@@ -503,11 +518,11 @@
                         else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
 
                         previewElement.innerHTML = `
-                                                                                                                <div class="text-center">
-                                                                                                                    <div style="font-size: 2rem;">${fileIcon}</div>
-                                                                                                                    <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
-                                                                                                                </div>
-                                                                                                            `;
+                                                                                                                                                                                                <div class="text-center">
+                                                                                                                                                                                                    <div style="font-size: 2rem;">${fileIcon}</div>
+                                                                                                                                                                                                    <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
+                                                                                                                                                                                                </div>
+                                                                                                                                                                                            `;
                     }
                 };
 

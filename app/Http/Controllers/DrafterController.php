@@ -79,6 +79,12 @@ class DrafterController extends Controller
 
         return redirect()->route('drafter.index')->with('success', 'Surat berhasil diajukan');
     }
+    public function getPenerimaSurat()
+    {
+        $penerima = User::orderBy('name', 'ASC')->get();
+
+        return response()->json(['data' => $penerima]);
+    }
     public function store(Request $request)
     {
         $KodeProject = $request->KodeProject;

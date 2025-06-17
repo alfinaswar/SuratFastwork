@@ -79,6 +79,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::prefix('drafter')->group(function () {
         Route::POST('/ajukan-dokumen/{id}', [DrafterController::class, 'ajukandokumen'])->name('drafter.ajukan');
+        Route::POST('/get-penerima-surat', [DrafterController::class, 'getPenerimaSurat'])->name('drafter.getPenerimaSurat');
     });
     Route::resource('templates', TemplateController::class);
     Route::resource('drafter', DrafterController::class);
