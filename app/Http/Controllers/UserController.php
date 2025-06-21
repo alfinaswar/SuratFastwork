@@ -167,6 +167,14 @@ class UserController extends Controller
         }
         return response()->json($user);
     }
+    public function getCCInternal(Request $request)
+    {
+        $departemenId = $request->departemen_id;
+
+        $units = User::where('IdDepartemen', $departemenId)->get(['id', 'NamaUnit']);
+
+        return response()->json($units);
+    }
     /**
      * Remove the specified resource from storage.
      *
