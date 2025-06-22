@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Departemen;
 use App\Models\MasterPenerimaEksternal;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\View\View;
 use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
-use Illuminate\Support\Arr;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class UserController extends Controller
 {
@@ -49,7 +49,6 @@ class UserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-
         $input = $request->all();
         // dd($request->hasFile('Foto'));
 
@@ -63,7 +62,6 @@ class UserController extends Controller
             $file->storeAs('public/DigitalSign', $file->getClientOriginalName());
             $data['DigitalSign'] = $file->getClientOriginalName();
         }
-
 
         // dd($input);
         $input['password'] = Hash::make($input['password']);
@@ -81,10 +79,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id): View
-    {
-
-    }
+    public function show($id): View {}
 
     /**
      * Show the form for editing the specified resource.
@@ -148,9 +143,11 @@ class UserController extends Controller
 
         $user->assignRole($request->input('roles'));
 
-        return redirect()->back()
+        return redirect()
+            ->back()
             ->with('success', 'User updated successfully');
     }
+
     public function getUsers($id)
     {
         $user = User::with('getDepartmen')->find($id);
@@ -159,6 +156,7 @@ class UserController extends Controller
         }
         return response()->json($user);
     }
+
     public function getUsersEks($id)
     {
         $user = MasterPenerimaEksternal::find($id);
@@ -167,14 +165,16 @@ class UserController extends Controller
         }
         return response()->json($user);
     }
+
     public function getCCInternal(Request $request)
     {
-        $departemenId = $request->departemen_id;
+        $iduser = $request->id;
 
-        $units = User::where('IdDepartemen', $departemenId)->get(['id', 'NamaUnit']);
+        $units = User::whereNot('id', $iduser)->get(['id', 'name']);
 
         return response()->json($units);
     }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -184,7 +184,8 @@ class UserController extends Controller
     public function destroy($id): RedirectResponse
     {
         User::find($id)->delete();
-        return redirect()->route('users.index')
+        return redirect()
+            ->route('users.index')
             ->with('success', 'User deleted successfully');
     }
 }

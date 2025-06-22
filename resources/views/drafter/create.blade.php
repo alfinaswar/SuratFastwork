@@ -79,7 +79,8 @@
                                     <div class="col-6">
                                         <div class="form-group mb-3">
                                             <label for="tanggal_surat">Tanggal Surat</label>
-                                            <input type="date" class="form-control" id="TanggalSurat" name="TanggalSurat">
+                                            <input type="date" class="form-control" id="TanggalSurat"
+                                                name="TanggalSurat">
                                             @error('TanggalSurat')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -112,11 +113,11 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group mb-3">
                                                         <label for="kepada">Penerima Surat</label>
-                                                        <select class="form-control" data-trigger name="PenerimaSurat"
-                                                            id="choices-multiple-default PenerimaSurat"
-                                                            onchange="selectPenerimaInt(this)"
+                                                        <select class="form-control PenerimaSurat" name="PenerimaSurat"
+                                                            id="choices-multiple-default"
                                                             placeholder="This is a placeholder"
                                                             data-url="{{ route('users.getCCInternal') }}">
+
                                                             @foreach ($penerima as $p)
                                                                 <option value="{{ $p->id }}">{{ $p->name }} -
                                                                     {{ $p->jabatan }}
@@ -184,9 +185,8 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group mb-3">
                                                         <label for="kepada">Penerima Surat</label>
-                                                        <select class="form-control select-filter" data-trigger
+                                                        <select class="form-control select-filter"
                                                             name="PenerimaSuratEksternal" id="choices-multiple-default"
-                                                            onchange="selectPenerimaExt(this)"
                                                             placeholder="This is a placeholder">
                                                             <option value="">Pilih Penerima</option>
                                                             @foreach ($eksternal as $pa)
@@ -201,8 +201,9 @@
                                                     </div>
                                                     <div class="form-group mb-3">
                                                         <label for="kepada">Inisial Penerima</label>
-                                                        <input type="text" name="InisialPenerima" id="InisialPenerimaExt"
-                                                            class="form-control" placeholder="Autofill" readonly>
+                                                        <input type="text" name="InisialPenerima"
+                                                            id="InisialPenerimaExt" class="form-control"
+                                                            placeholder="Autofill" readonly>
 
                                                     </div>
                                                     <div class="form-group mb-3">
@@ -253,10 +254,9 @@
                                         <div class="accordion-body">
                                             <div class="form-group mb-3">
                                                 <label for="cc">Carbon Copy Internal</label>
-                                                <select class="form-control select-filter" data-trigger name="CarbonCopy[]"
-                                                    id="choices-multiple-cc CCInternal" placeholder="Pilih penerima CC"
+                                                <select class="form-control PenerimaInternal2" name="CarbonCopy[]"
+                                                    id="choices-multiple-default" placeholder="Pilih penerima CC"
                                                     multiple>
-                                                    <option value="">Pilih penerima CC</option>
                                                     @foreach ($penerima as $p)
                                                         <option value="{{ $p->id }}">{{ $p->name }} -
                                                             {{ $p->jabatan }}
@@ -273,7 +273,8 @@
                                 <div class="accordion-item" id="CCExternal">
                                     <h2 class="accordion-header" id="headingSix">
                                         <button class="accordion-button fw-medium" type="button"
-                                            data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                                            data-bs-target="#collapseSix" aria-expanded="true"
+                                            aria-controls="collapseSix">
                                             Carbon Copy Eksternal
                                         </button>
                                     </h2>
@@ -389,41 +390,46 @@
     </div>
 @endsection
 @push('js')
-
     <script>
-        $(document).ready(function () {
-            // Setup awal
-            $("#PenerimaInternal").hide();
-            $("#PenerimaEksternal").hide();
-            $("#CCInternal").hide();
-            $("#CCExternal").hide();
-            $("#BCCInternal").hide();
-            $("#BCCExternal").hide();
-            $("#IsiSurat").show();
+        $(document).ready(function() {
+            // // Setup awal
+            // $("#PenerimaInternal").hide();
+            // $("#PenerimaEksternal").hide();
+            // $("#CCInternal").hide();
+            // $("#CCExternal").hide();
+            // $("#BCCInternal").hide();
+            // $("#BCCExternal").hide();
+            // $("#IsiSurat").show();
 
-            $('#PenerimaSurat').on('change', function () {
-                let departemenId = $(this).val();
-                let url = $(this).data('url'); 1
+            $('.PenerimaSurat').on('change', function() {
+                let Penerima1 = $(this).val();
+                let url = $(this).data('url');
 
-                $('#Unit').empty().append('<option value="">Loading...</option>');
+                $('.PenerimaInternal2').empty().append('<option value="">Loading...</option>');
 
-                if (departemenId) {
+                if (Penerima1) {
                     $.ajax({
                         url: url,
                         type: 'GET',
-                        data: { departemen_id: departemenId },
-                        success: function (response) {
-                            $('#Unit').empty().append('<option value="">Pilih Unit</option>');
-                            $.each(response, function (key, unit) {
-                                $('#Unit').append(`<option value="${unit.id}">${unit.NamaUnit}</option>`);
+                        data: {
+                            id: Penerima1
+                        },
+                        success: function(response) {
+                            $('.PenerimaInternal2').empty().append(
+                                '<option value="">Pilih Nama</option>');
+                            $.each(response, function(key, unit) {
+                                $('.PenerimaInternal2').append(
+                                    `<option value="${unit.id}">${unit.name}</option>`
+                                );
                             });
                         },
-                        error: function () {
-                            $('#Unit').empty().append('<option value="">Gagal mengambil data</option>');
+                        error: function() {
+                            $('.PenerimaInternal2').empty().append(
+                                '<option value="">Gagal mengambil data</option>');
                         }
                     });
                 } else {
-                    $('#Unit').empty().append('<option value="">Pilih Unit</option>');
+                    $('.PenerimaInternal2').empty().append('<option value="">Pilih Nama</option>');
                 }
             });
 
@@ -438,7 +444,7 @@
                 url: "{{ route('kategori-surat.get-field', '') }}/" + id,
                 data: {},
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     $("#IsiSurat").show();
                     if (response.PenerimaInternal == "YA") {
                         $("#PenerimaInternal").show();
@@ -474,7 +480,6 @@
                 }
             });
         }
-
     </script>
     <script>
         function previewFiles(input) {
@@ -486,9 +491,10 @@
                 const previewElement = document.createElement('div');
                 previewElement.className = 'preview-item position-relative';
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     if (file.type.startsWith('image/')) {
-                        previewElement.innerHTML = `
+                        previewElement.innerHTML =
+                            `
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <img src="${e.target.result}" style="max-width: 150px; max-height: 150px; object-fit: cover;">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <div class="mt-1">${file.name}</div>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             `;
@@ -498,7 +504,8 @@
                         else if (file.type.includes('word')) fileIcon = '📘';
                         else if (file.type.includes('excel') || file.type.includes('sheet')) fileIcon = '📗';
 
-                        previewElement.innerHTML = `
+                        previewElement.innerHTML =
+                            `
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 <div class="text-center">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <div style="font-size: 2rem;">${fileIcon}</div>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <div style="word-break: break-word; max-width: 150px;">${file.name}</div>
